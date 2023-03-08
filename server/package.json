@@ -11,20 +11,16 @@
   },
   "devDependencies": {},
   "dependencies": {
-    "@strapi/plugin-i18n": "4.7.1",
-<<<<<<< Updated upstream
-    "@strapi/plugin-users-permissions": "4.7.1",
     "@strapi/strapi": "4.7.1",
-    "better-sqlite3": "8.0.1"
-=======
+    "@strapi/plugin-users-permissions": "4.7.1",
+    "@strapi/plugin-i18n": "4.7.1",
     "mysql": "2.18.1"
->>>>>>> Stashed changes
   },
   "author": {
     "name": "A Strapi developer"
   },
   "strapi": {
-    "uuid": "dd562dda-75f2-46cc-bd62-de01a5461004"
+    "uuid": "329b0625-6281-4684-a1c9-0b52853d0088"
   },
   "engines": {
     "node": ">=14.19.1 <=18.x.x",
