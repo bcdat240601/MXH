@@ -1,5 +1,5 @@
 {
-  "name": "my-project",
+  "name": "server",
   "private": true,
   "version": "0.1.0",
   "description": "A Strapi application",
@@ -12,15 +12,19 @@
   "devDependencies": {},
   "dependencies": {
     "@strapi/plugin-i18n": "4.7.1",
+<<<<<<< Updated upstream
     "@strapi/plugin-users-permissions": "4.7.1",
     "@strapi/strapi": "4.7.1",
     "better-sqlite3": "8.0.1"
+=======
+    "mysql": "2.18.1"
+>>>>>>> Stashed changes
   },
   "author": {
     "name": "A Strapi developer"
   },
   "strapi": {
-    "uuid": "cba61cf1-b78e-4428-97eb-d98f6bd04913"
+    "uuid": "dd562dda-75f2-46cc-bd62-de01a5461004"
   },
   "engines": {
     "node": ">=14.19.1 <=18.x.x",
