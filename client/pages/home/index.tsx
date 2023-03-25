@@ -1,12 +1,11 @@
-import Home from "../../src/components/home/Home"
-
+import Home from "../../src/components/home/Home";
 
 const Index = () => {
   return (
     <div>
-      <Home/>
+      <Home />
     </div>
-  )
-}
+  );
+};
 
-export default Index
+export default Index;

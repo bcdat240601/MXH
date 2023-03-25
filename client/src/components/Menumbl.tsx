@@ -5,7 +5,7 @@ import { RiMessengerLine } from "react-icons/ri";
 import Images from "../assets/images";
 const Menumbl = () => {
   return (
-    <div className="bg-thWhite fixed -bottom-1 menu_mbl">
+    <div className="bg-thWhite fixed -bottom-1 menu_mbl md:hidden lg:hidden">
       <div className="flex items-center justify-center w-screen h-14 gap-x-14">
         <AiOutlineHome size={25} />
         <AiOutlineSearch size={25} />
