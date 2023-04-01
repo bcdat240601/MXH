@@ -1,15 +1,18 @@
 import React from "react";
-import Images from "../../assets/images";
+import Images from "../../../assets/images";
 import Suggest from "./Suggest";
+import Image from "next/image";
 const Leftbar = () => {
   return (
     <div className="left_bar w-[30rem] pl-5 pr-14 pt-12 hidden lg:block">
       <div className="flex items-center justify-between">
         <div className="flex gap-x-3 items-center">
-          <img
+          <Image
             src={Images.av2.default.src}
             alt=""
             className="w-14 h-14 rounded-full object-cover"
+            width={100}
+            height={100}
           />
           <div className="text-[13px] md:text-sm">
             <p className="font-bold">.WazowSki_11</p>

@@ -23,6 +23,13 @@
       "module": "CommonJS"
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/*", "types/*"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/*",
+    "types/*",
+    "src/components/pages/Home"
+  ],
   "exclude": ["node_modules"]
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import Images from "../../assets/images";
+import Images from "../../../assets/images";
 const Story = () => {
   return (
     <div>

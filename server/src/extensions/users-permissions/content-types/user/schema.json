@@ -63,11 +63,6 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "id_user": {
-      "type": "integer",
-      "unique": true,
-      "required": true
-    },
     "posts": {
       "type": "relation",
       "relation": "oneToMany",
