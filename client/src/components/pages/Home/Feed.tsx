@@ -1,4 +1,4 @@
-import React, { Attributes, useState } from "react";
+import React, { useRef, useState } from "react";
 //Library
 import useSound from "use-sound";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
@@ -9,6 +9,8 @@ import Images from "../../../assets/images";
 import Optionmbl from "./Optionmbl";
 import Image from "next/image";
 import Comment from "./Comment";
+import axios from "axios";
+
 const Feed = ({
   caption,
   createdAt,
@@ -19,12 +21,14 @@ const Feed = ({
 }: any) => {
   const { username } = user_post.data.attributes;
 
+  const inputRef = useRef<HTMLInputElement>(null);
   //declare
   const [like] = useSound("./assets/sounds/savingSound.mp3");
   const [unlike] = useSound("./assets/sounds/unsavingSound.mp3");
   const [isShow, setIsShow] = useState(false);
   const [comment, setComment] = useState<boolean>(false);
   const [isReact, setIsReact] = useState<boolean>(false);
+  const [listComments, setListComments] = useState<any>(comments.data);
   const handleReact = () => {
     if (isReact === true) {
       unlike();
@@ -43,6 +47,29 @@ const Feed = ({
       setIsShow(true);
     }
   };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    const comment = inputRef.current?.value || "";
+    const response = await axios.post(
+      "http://localhost:1337/api/comments",
+
+      {
+        data: {
+          //chưa tự lấy id_comment để lấy comment mới
+          id_comment: 16,
+          content: comment,
+          post: [3],
+          user_comment: [3],
+        },
+      }
+    );
+    setListComments([...listComments, response.data.data]);
+    console.log(listComments);
+    //lỗi sau này sẽ tìm cách sửa (nhưng mà chạy được)
+    inputRef.current.value = "";
+  };
+
   //UI
   return (
     <section className="mx-3 bg-thWhite rounded-xl rectangle py-4 duration-500 md:w-[35rem] cursor-pointer">
@@ -82,7 +109,7 @@ const Feed = ({
           height={1000}
         />
         <p className="text-[13px] text-thGray font-light px-3 py-3 md:text-sm">
-          <span className="font-bold mr-1">tricSopSki</span>
+          <span className="font-bold mr-1">{username}</span>
           {caption}
         </p>
       </aside>
@@ -107,22 +134,25 @@ const Feed = ({
           >
             <AiOutlineComment size={25} />
           </div>
-          <span className="text-xs ">{comments.data.length}</span>
+          <span className="text-xs ">{listComments.length}</span>
         </div>
       </aside>
       <aside className={`comment area py-3 ${comment ? "block" : "hidden"}`}>
         <div>
-          {comments.data.map((comment: any) => (
+          {listComments.map((comment: any) => (
             <div key={comment.id}>
               <Comment id={comment.id} {...comment.attributes} />
             </div>
           ))}
-
-          <input
-            type="text"
-            className="outline-none border-none px-3 bg-thWhite w-full mt-3"
-            placeholder="Add comment"
-          />
+          <form onSubmit={(e) => handleSubmit(e)}>
+            <input
+              type="text"
+              className="outline-none border-none px-3 bg-thWhite w-full mt-3"
+              placeholder="Add comment"
+              ref={inputRef}
+            />
+            <button type="submit">Send</button>
+          </form>
         </div>
       </aside>
     </section>
