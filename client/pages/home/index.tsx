@@ -1,9 +1,19 @@
 import Home from "../../src/components/pages/Home/Home";
 import axios from "axios";
+import io from "socket.io-client";
+
 const Index = ({ data }: any) => {
+  const socket = io("http://127.0.0.1:1337", {
+    transports: ["websocket"],
+  });
+  socket.on("connect", function () {
+    console.log("Connected to WS server");
+
+    console.log(socket.connected);
+  });
   return (
     <div>
-      <Home {...data} />
+      <Home socket={socket} {...data} />
     </div>
   );
 };

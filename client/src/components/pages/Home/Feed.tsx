@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 //Library
 import useSound from "use-sound";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
@@ -18,9 +18,10 @@ const Feed = ({
   updatedAt,
   comments,
   user_post,
+  socket,
 }: any) => {
   const { username } = user_post.data.attributes;
-
+  console.log(comments);
   const inputRef = useRef<HTMLInputElement>(null);
   //declare
   const [like] = useSound("./assets/sounds/savingSound.mp3");
@@ -48,26 +49,31 @@ const Feed = ({
     }
   };
 
+  socket.on("get-comments", async () => {
+    const response = await axios.get(
+      "http://localhost:1337/api/comments?pagination[pageSize]=200"
+    );
+    console.log(response.data.data.length);
+    setListComments(response.data.data);
+  });
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const comment = inputRef.current?.value || "";
-    const response = await axios.post(
-      "http://localhost:1337/api/comments",
+    const commentData = {
+      data: {
+        id_comment: Math.floor(Math.random() * 12000),
+        content: comment,
+        post: [3],
+        user_comment: [3],
+      },
+    };
+    await socket.emit("comment", commentData);
+    setListComments([...listComments, { attributes: commentData.data }]);
+    socket.off("comment");
 
-      {
-        data: {
-          //chưa tự lấy id_comment để lấy comment mới
-          id_comment: 16,
-          content: comment,
-          post: [3],
-          user_comment: [3],
-        },
-      }
-    );
-    setListComments([...listComments, response.data.data]);
-    console.log(listComments);
-    //lỗi sau này sẽ tìm cách sửa (nhưng mà chạy được)
-    inputRef.current.value = "";
+    // console.log(listComments);
+    // // //lỗi sau này sẽ tìm cách sửa (nhưng mà chạy được)
+    // inputRef.current.value = "";
   };
 
   //UI
