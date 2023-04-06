@@ -14,5 +14,34 @@ export default {
    * This gives you an opportunity to set up your data model,
    * run jobs, or perform some special logic.
    */
-  bootstrap(/*{ strapi }*/) {},
+  bootstrap(/*{ strapi }*/) {
+    console.log("test boostrap");
+    const io = require("socket.io")(strapi.server.httpServer, {
+      cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+
+        // credentials: true,
+      },
+    });
+
+    io.on("connection", (socket) => {
+      socket.join("1");
+      socket.on("comment", async (message) => {
+        console.log(message);
+        const data = await strapi
+          .service("api::comment.comment")
+          .create(message);
+
+        console.log("Done");
+        socket.to("1").emit("get-comments", () => {
+          console.log("try to get comments");
+        });
+        console.log("Done in 2");
+      });
+      socket.on("disconnect", () => {
+        console.log("🔥: A user disconnected");
+      });
+    });
+  },
 };

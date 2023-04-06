@@ -18,7 +18,7 @@ import Storyslide from "./Storyslide";
 //   };
 // }
 
-const Home = ({ data }: any) => {
+const Home = ({ data, socket }: any) => {
   console.log(data);
   return (
     <div className="flex h-screen">
@@ -30,7 +30,7 @@ const Home = ({ data }: any) => {
         <section className="space-y-10">
           {data.map((feed: any) => (
             <div key={feed.id} className="pt-3">
-              <Feed {...feed.attributes} />
+              <Feed socket={socket} {...feed.attributes} />
             </div>
           ))}
         </section>
