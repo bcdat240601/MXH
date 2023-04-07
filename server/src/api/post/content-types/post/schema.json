@@ -12,11 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "id_post": {
-      "type": "integer",
-      "required": true,
-      "unique": true
-    },
     "caption": {
       "type": "text"
     },
@@ -32,11 +27,16 @@
       "target": "plugin::users-permissions.user",
       "inversedBy": "posts"
     },
-    "media": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::media.media",
-      "mappedBy": "post"
+    "files": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }
