@@ -21,7 +21,7 @@ const Feed = ({
   socket,
 }: any) => {
   const { username } = user_post.data.attributes;
-  console.log(comments);
+  console.log(id_post);
   const inputRef = useRef<HTMLInputElement>(null);
   //declare
   const [like] = useSound("./assets/sounds/savingSound.mp3");
@@ -74,7 +74,7 @@ const Feed = ({
       data: {
         id_comment: Math.floor(Math.random() * 12000),
         content: comment,
-        post: [3],
+        post: [id_post],
         user_comment: [3],
       },
     };
