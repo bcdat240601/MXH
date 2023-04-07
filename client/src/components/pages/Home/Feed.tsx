@@ -49,13 +49,24 @@ const Feed = ({
     }
   };
 
-  // socket.on("get-comments", async () => {
-  //   const response = await axios.get(
-  //     "http://localhost:1337/api/comments?pagination[pageSize]=200"
-  //   );
-  //   console.log(response.data.data.length);
-  //   setListComments(response.data.data);
-  // });
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(
+        "http://localhost:1337/api/comments?pagination[pageSize]=200"
+      );
+      console.log(response.data.data.length);
+      setListComments(response.data.data);
+    };
+    fetchData();
+  }, []);
+
+  socket.on("get-comments", async () => {
+    const response = await axios.get(
+      "http://localhost:1337/api/comments?pagination[pageSize]=200"
+    );
+    console.log(response.data.data.length);
+    setListComments(response.data.data);
+  });
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const comment = inputRef.current?.value || "";
