@@ -28,9 +28,9 @@ const Home = ({ data, socket }: any) => {
         <Header />
         <Storyslide />
         <section className="space-y-10">
-          {data.map((feed: any) => (
+          {data.map((feed: any, index: number) => (
             <div key={feed.id} className="pt-3">
-              <Feed socket={socket} {...feed.attributes} />
+              <Feed id_post={index + 1} socket={socket} {...feed.attributes} />
             </div>
           ))}
         </section>
