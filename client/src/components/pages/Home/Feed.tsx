@@ -10,7 +10,16 @@ import Optionmbl from "./Optionmbl";
 import Image from "next/image";
 import Comment from "./Comment";
 import axios from "axios";
-
+/*{
+  caption,
+  createdAt,
+  id_post,
+  updatedAt,
+  comments,
+  user_post,
+  files,
+  socket,
+} */
 const Feed = ({
   caption,
   createdAt,
@@ -18,12 +27,14 @@ const Feed = ({
   updatedAt,
   comments,
   user_post,
+  image,
   socket,
 }: any) => {
+  // const { files } = images;
   const { username } = user_post.data.attributes;
-  console.log(id_post);
+  // const images = files.data;
   const inputRef = useRef<HTMLInputElement>(null);
-  //declare
+  console.log(image);
   const [like] = useSound("./assets/sounds/savingSound.mp3");
   const [unlike] = useSound("./assets/sounds/unsavingSound.mp3");
   const [isShow, setIsShow] = useState(false);
@@ -52,7 +63,7 @@ const Feed = ({
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
-        "http://localhost:1337/api/comments?pagination[pageSize]=200"
+        `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?pagination[pageSize]=200`
       );
       console.log(response.data.data.length);
       setListComments(response.data.data);
@@ -62,7 +73,7 @@ const Feed = ({
 
   socket.on("get-comments", async () => {
     const response = await axios.get(
-      "http://localhost:1337/api/comments?pagination[pageSize]=200"
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?pagination[pageSize]=200`
     );
     console.log(response.data.data.length);
     setListComments(response.data.data);
@@ -119,8 +130,8 @@ const Feed = ({
       </aside>
       <aside>
         <Image
-          src={Images.photo1.default.src}
-          alt=""
+          src={`${process.env.NEXT_PUBLIC_HOSTNAME}${image.data[0].attributes.formats.large.url}`}
+          alt="posts"
           className="object-cover w-full h-[17.5rem] md:h-[36.5rem]"
           width={1000}
           height={1000}
