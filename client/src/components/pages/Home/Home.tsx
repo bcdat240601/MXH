@@ -18,19 +18,23 @@ import Storyslide from "./Storyslide";
 //   };
 // }
 
-const Home = ({ data, socket }: any) => {
-  console.log(data);
+const Home = ({ posts, images, socket }: any) => {
   return (
-    <div className="flex h-screen">
+    <section className="flex h-screen">
       <Menutablet />
       <Menudesktop />
       <main className="flex-1 h-screen overflow-y-scroll md:pt-6 md:grid md:place-items-center gap-y-10">
         <Header />
         <Storyslide />
         <section className="space-y-10">
-          {data.map((feed: any) => (
-            <div key={feed.id} className="pt-3">
-              <Feed socket={socket} {...feed.attributes} />
+          {posts.data.map((feed: any, index: number) => (
+            <div key={index} className="pt-3">
+              <Feed
+                id_post={index + 1}
+                socket={socket}
+                {...feed.attributes}
+                image={images.data[0].attributes.files}
+              />
             </div>
           ))}
         </section>
@@ -40,7 +44,7 @@ const Home = ({ data, socket }: any) => {
         <Menumbl />
       </main>
       <Leftbar />
-    </div>
+    </section>
   );
 };
 

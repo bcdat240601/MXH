@@ -1,21 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.(mp4|webm)$/i,
-      use: [
-        {
-          loader: "file-loader",
-          options: {
-            publicPath: "/_next",
-            name: "static/media/[name].[hash].[ext]",
-          },
-        },
-      ],
-    });
-
-    return config;
+  images: {
+    domains: ["127.0.0.1"],
   },
 };
 module.exports = nextConfig;
