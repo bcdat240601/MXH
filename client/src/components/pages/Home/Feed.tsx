@@ -73,10 +73,10 @@ const Feed = ({
 
   socket.on("get-comments", async () => {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?pagination[pageSize]=200`
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}posts/${id_post}?populate=comments`
     );
-    console.log(response.data.data.length);
-    setListComments(response.data.data);
+    const { data } = response.data.data.attributes.comments;
+    setListComments(data);
   });
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -130,7 +130,7 @@ const Feed = ({
       </aside>
       <aside>
         <Image
-          src={`${process.env.NEXT_PUBLIC_HOSTNAME}${image.data[0].attributes.formats.large.url}`}
+          src={`${process.env.NEXT_PUBLIC_HOSTNAME}${image.data[0].attributes.formats.medium.url}`}
           alt="posts"
           className="object-cover w-full h-[17.5rem] md:h-[36.5rem]"
           width={1000}
@@ -169,7 +169,11 @@ const Feed = ({
         <div>
           {listComments.map((comment: any) => (
             <div key={comment.id}>
-              <Comment id={comment.id} {...comment.attributes} />
+              <Comment
+                username={username}
+                id={comment.id}
+                {...comment.attributes}
+              />
             </div>
           ))}
           <form onSubmit={(e) => handleSubmit(e)}>

@@ -9,6 +9,7 @@ const Comment = ({
   id,
   content,
   id_comment_response,
+  username,
   createdAt,
   updatedAt,
 }: any) => {
@@ -28,7 +29,7 @@ const Comment = ({
         height={100}
       />
       <div className="block">
-        <p className="font-medium float-left"></p>
+        <p className="font-medium float-left">{username}</p>
 
         <span className="ml-1 ">{content}</span>
       </div>

@@ -2,7 +2,9 @@ import React from "react";
 import Images from "../../../assets/images";
 import Suggest from "./Suggest";
 import Image from "next/image";
+import { useRouter } from "next/router";
 const Leftbar = () => {
+  const router = useRouter();
   return (
     <div className="left_bar w-[30rem] pl-5 pr-14 pt-12 hidden lg:block">
       <div className="flex items-center justify-between">
@@ -19,7 +21,15 @@ const Leftbar = () => {
             <span className="text-thGray">Mike WazowSki</span>
           </div>
         </div>
-        <p className="font-semibold text-thBlue text-xs">Đăng Xuất</p>
+        <p
+          onClick={() => {
+            sessionStorage.removeItem("account");
+            router.push("/");
+          }}
+          className="font-semibold text-thBlue text-xs cursor-pointer"
+        >
+          Đăng Xuất
+        </p>
       </div>
       <div>
         <div className="flex justify-between items-center py-5">

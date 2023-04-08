@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Home from "../../src/components/pages/Home/Home";
 import axios from "axios";
 import io from "socket.io-client";
@@ -12,9 +14,11 @@ const Index = ({ postData, imgData }: any) => {
     console.log(socket.connected);
   });
   return (
-    <section>
-      <Home socket={socket} posts={postData} images={imgData} />
-    </section>
+    <>
+      <section>
+        <Home socket={socket} posts={postData} images={imgData} />
+      </section>
+    </>
   );
 };
 export default Index;
