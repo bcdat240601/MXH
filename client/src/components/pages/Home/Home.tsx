@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { useRouter } from "next/router";
 import Header from "../../Header";
 import Menudesktop from "../../Menudesktop";
@@ -10,11 +10,20 @@ import Storyslide from "./Storyslide";
 
 const Home = ({ posts, images, socket }: any) => {
   const router = useRouter();
-  useEffect(() => {
-    const token = sessionStorage.getItem("account") || "";
-    console.log(token);
-    if (token === "") router.push("/");
-  }, []);
+  console.log(posts);
+  // useEffect(() => {
+  //   const token = sessionStorage.getItem("account") || "";
+  //   console.log(token);
+  //   const fetchToken = async () => {
+  //     const response = await axios.get("http://localhost:1337/api/posts", {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     console.log(response.data);
+  //   };
+  //   fetchToken();
+  // }, []);
 
   return (
     <>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 const Form = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const {
@@ -13,12 +14,16 @@ const Form = () => {
   //sleep function
   const sleep = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
+  const [cookie, setCookie] = useCookies(["user"]);
+
+  //Check cookies
   useEffect(() => {
-    const token = sessionStorage.getItem("account") || "";
+    const token = cookie.user || "";
     console.log(token);
-    if (token !== "") router.push("/home");
+    if (token !== "") window.location.replace("/home");
   }, []);
 
+  //onSubmit function
   const onSubmit: SubmitHandler<any> = async (data) => {
     setLoading(true);
     await sleep(1000);
@@ -32,8 +37,12 @@ const Form = () => {
     if (response.data.error) {
       alert("Wrong account");
     } else {
-      sessionStorage.setItem("account", JSON.stringify(response.data.jwt));
-      router.push("/home");
+      setCookie("user", JSON.stringify(response.data.jwt), {
+        path: "/",
+        maxAge: 3600, // Expires after 1hr
+        sameSite: true,
+      });
+      window.location.replace("/home");
     }
     setLoading(false);
   };

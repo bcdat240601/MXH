@@ -1,10 +1,14 @@
 import React from "react";
+//library
+import { useRouter } from "next/router";
+//components
 import Images from "../../../assets/images";
 import Suggest from "./Suggest";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useCookies } from "react-cookie";
 const Leftbar = () => {
   const router = useRouter();
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   return (
     <div className="left_bar w-[30rem] pl-5 pr-14 pt-12 hidden lg:block">
       <div className="flex items-center justify-between">
@@ -23,7 +27,7 @@ const Leftbar = () => {
         </div>
         <p
           onClick={() => {
-            sessionStorage.removeItem("account");
+            removeCookie("user", { path: "/" });
             router.push("/");
           }}
           className="font-semibold text-thBlue text-xs cursor-pointer"

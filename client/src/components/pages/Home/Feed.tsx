@@ -4,22 +4,15 @@ import useSound from "use-sound";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { AiFillHeart, AiOutlineHeart, AiOutlineComment } from "react-icons/ai";
-import Images from "../../../assets/images";
+import axios from "axios";
+import { useCookies } from "react-cookie";
+
 //Components
 import Optionmbl from "./Optionmbl";
 import Image from "next/image";
 import Comment from "./Comment";
-import axios from "axios";
-/*{
-  caption,
-  createdAt,
-  id_post,
-  updatedAt,
-  comments,
-  user_post,
-  files,
-  socket,
-} */
+import Images from "../../../assets/images";
+
 const Feed = ({
   caption,
   createdAt,
@@ -30,11 +23,10 @@ const Feed = ({
   image,
   socket,
 }: any) => {
-  // const { files } = images;
+  const [cookie] = useCookies(["user"]);
   const { username } = user_post.data.attributes;
-  // const images = files.data;
   const inputRef = useRef<HTMLInputElement>(null);
-  console.log(image);
+  //declare
   const [like] = useSound("./assets/sounds/savingSound.mp3");
   const [unlike] = useSound("./assets/sounds/unsavingSound.mp3");
   const [isShow, setIsShow] = useState(false);
@@ -61,9 +53,15 @@ const Feed = ({
   };
 
   useEffect(() => {
+    const token = cookie.user;
     const fetchData = async () => {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?pagination[pageSize]=200`
+        `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?pagination[pageSize]=200`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.replaceAll('"', "")}`,
+          },
+        }
       );
       console.log(response.data.data.length);
       setListComments(response.data.data);
@@ -72,8 +70,15 @@ const Feed = ({
   }, []);
 
   socket.on("get-comments", async () => {
+    const token = cookie.user;
+
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_CLIENT_URL}posts/${id_post}?populate=comments`
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}posts/${id_post}?populate=comments`,
+      {
+        headers: {
+          Authorization: `Bearer ${token.replaceAll('"', "")}`,
+        },
+      }
     );
     const { data } = response.data.data.attributes.comments;
     setListComments(data);
