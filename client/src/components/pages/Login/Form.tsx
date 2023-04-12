@@ -93,6 +93,7 @@ const Form = () => {
           placeholder="password"
           {...register("pass", { required: true })}
         /> */}
+        <h1 className="text-2xl font-bold text-thCyan">Welcome Back</h1>
         <div className="flex flex-col">
           <input
             type="email"
@@ -102,7 +103,7 @@ const Form = () => {
             placeholder="Enter your email"
           />
           {errors.email && (
-            <small className="text-red-600">
+            <small className="text-red-600 w-[17rem] py-1">
               *{errors.email.message?.toString()}
             </small>
           )}
@@ -115,7 +116,7 @@ const Form = () => {
             {...register("password", { required: "This is required" })}
           />
           {errors.password && (
-            <small className="text-red-600">
+            <small className="text-red-600 w-[17rem] py-1">
               *{errors.password.message?.toString()}
             </small>
           )}
