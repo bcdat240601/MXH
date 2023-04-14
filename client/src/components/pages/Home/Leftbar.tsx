@@ -6,7 +6,7 @@ import Images from "../../../assets/images";
 import Suggest from "./Suggest";
 import Image from "next/image";
 import { useCookies } from "react-cookie";
-const Leftbar = () => {
+const Leftbar = ({ username }: any) => {
   const router = useRouter();
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   return (
@@ -21,7 +21,7 @@ const Leftbar = () => {
             height={100}
           />
           <div className="text-[13px] md:text-sm">
-            <p className="font-bold">.WazowSki_11</p>
+            <p className="font-bold">{username}</p>
             <span className="text-thGray">Mike WazowSki</span>
           </div>
         </div>

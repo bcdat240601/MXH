@@ -8,22 +8,8 @@ import Feed from "./Feed";
 import Leftbar from "./Leftbar";
 import Storyslide from "./Storyslide";
 
-const Home = ({ posts, images, socket }: any) => {
-  const router = useRouter();
-  console.log(posts);
-  // useEffect(() => {
-  //   const token = sessionStorage.getItem("account") || "";
-  //   console.log(token);
-  //   const fetchToken = async () => {
-  //     const response = await axios.get("http://localhost:1337/api/posts", {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //     console.log(response.data);
-  //   };
-  //   fetchToken();
-  // }, []);
+const Home = ({ posts, images, user, socket }: any) => {
+  console.log(user);
 
   return (
     <>
@@ -37,6 +23,7 @@ const Home = ({ posts, images, socket }: any) => {
             {posts.data.map((feed: any, index: number) => (
               <div key={index} className="pt-3">
                 <Feed
+                  currentUser={user}
                   id_post={index + 1}
                   socket={socket}
                   {...feed.attributes}
@@ -50,7 +37,7 @@ const Home = ({ posts, images, socket }: any) => {
           </section>
           <Menumbl />
         </main>
-        <Leftbar />
+        <Leftbar username={user.username} />
       </section>
     </>
   );

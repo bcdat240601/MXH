@@ -76,23 +76,6 @@ const Form = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-y-6 items-center"
       >
-        {/* <h1 className="text-2xl font-bold text-thCyan">Welcome Back</h1>
-        <input
-          type="email"
-          id="emailfield"
-          defaultValue=""
-          {...register("email", { required: true })}
-          className=" py-3 pl-3 pr-4 w-[17rem] border-[1px] rounded-lg text-xs"
-          placeholder="Enter your email"
-        />
-        <p>{errors.pass?.message}</p>
-        <input
-          type="password"
-          id=""
-          className=" py-3 pl-3 pr-4 w-[17rem] border-[1px] rounded-lg text-xs"
-          placeholder="password"
-          {...register("pass", { required: true })}
-        /> */}
         <h1 className="text-2xl font-bold text-thCyan">Welcome Back</h1>
         <div className="flex flex-col">
           <input

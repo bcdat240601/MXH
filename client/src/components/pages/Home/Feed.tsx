@@ -17,12 +17,14 @@ const Feed = ({
   caption,
   createdAt,
   id_post,
+  currentUser,
   updatedAt,
   comments,
   user_post,
   image,
   socket,
 }: any) => {
+  console.log(comments.data[0]);
   const [cookie] = useCookies(["user"]);
   const { username } = user_post.data.attributes;
   const inputRef = useRef<HTMLInputElement>(null);
@@ -52,38 +54,22 @@ const Feed = ({
     }
   };
 
-  useEffect(() => {
-    const token = cookie.user;
-    const fetchData = async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?pagination[pageSize]=200`,
-        {
-          headers: {
-            Authorization: `Bearer ${token.replaceAll('"', "")}`,
-          },
-        }
-      );
-      console.log(response.data.data.length);
-      setListComments(response.data.data);
-    };
-    fetchData();
-  }, []);
-
   socket.on("get-comments", async () => {
     const token = cookie.user;
 
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_CLIENT_URL}posts/${id_post}?populate=comments`,
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?populate=user_comment`,
       {
         headers: {
           Authorization: `Bearer ${token.replaceAll('"', "")}`,
         },
       }
     );
-    const { data } = response.data.data.attributes.comments;
-    setListComments(data);
+    setListComments(response.data.data);
   });
   const handleSubmit = async (e: any) => {
+    const token = cookie.user;
+
     e.preventDefault();
     const comment = inputRef.current?.value || "";
     const commentData = {
@@ -91,15 +77,17 @@ const Feed = ({
         id_comment: Math.floor(Math.random() * 12000),
         content: comment,
         post: [id_post],
-        user_comment: [3],
+        user_comment: [currentUser.id],
       },
     };
     await socket.emit("comment", commentData);
-    setListComments([...listComments, { attributes: commentData.data }]);
+    setListComments([
+      ...listComments,
+      { attributes: { ...commentData.data, username: currentUser.username } },
+    ]);
     socket.off("comment");
 
-    // console.log(listComments);
-    // // //lỗi sau này sẽ tìm cách sửa (nhưng mà chạy được)
+    //lỗi sau này sẽ tìm cách sửa (nhưng mà chạy được)
     // inputRef.current.value = "";
   };
 
@@ -175,7 +163,9 @@ const Feed = ({
           {listComments.map((comment: any) => (
             <div key={comment.id}>
               <Comment
-                username={username}
+                username={
+                  comment.attributes.user_comment?.data?.attributes?.username
+                }
                 id={comment.id}
                 {...comment.attributes}
               />
