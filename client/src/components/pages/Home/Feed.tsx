@@ -24,7 +24,7 @@ const Feed = ({
   socket,
 }: any) => {
   const [cookie] = useCookies(["user"]);
-  const { username } = user_post.data.attributes;
+  const { username } = user_post?.data.attributes;
   const inputRef = useRef<HTMLInputElement>(null);
   //declare
   const [like] = useSound("./assets/sounds/savingSound.mp3");

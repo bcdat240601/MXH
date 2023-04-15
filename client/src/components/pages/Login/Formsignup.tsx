@@ -5,8 +5,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { responsiveArray } from "antd/es/_util/responsiveObserver";
 const schema = yup
   .object({
+    role: yup.string(),
+    username: yup.string().required(),
     email: yup.string().required(),
     password: yup
       .string()
@@ -21,8 +24,9 @@ const schema = yup
   .required();
 type FormData = yup.InferType<typeof schema>;
 
-const Form = () => {
+const Formsignup = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [err, seterr] = useState<string>("");
   const {
     register,
     handleSubmit,
@@ -49,23 +53,28 @@ const Form = () => {
   const onSubmit: SubmitHandler<any> = async (data: FormData) => {
     setLoading(true);
     await sleep(1000);
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_CLIENT_URL}auth/local`,
-      {
-        identifier: data.email,
-        password: data.password,
+    const newUser: any = {
+      username: data.username,
+      email: data.email,
+      password: data.password,
+      role: data.role,
+    };
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_CLIENT_URL}users`,
+        newUser
+      );
+      if (response.data.error) {
+        console.log(response.data.error);
+        alert("Wrong ");
+      } else {
+        alert("success");
+        window.location.href = "/";
       }
-    );
-    if (response.data.error) {
-      alert("Wrong account");
-    } else {
-      setCookie("user", JSON.stringify(response.data.jwt), {
-        path: "/",
-        maxAge: 3600, // Expires after 1hr
-        sameSite: true,
-      });
-      window.location.replace("/home");
+    } catch (error) {
+      seterr("email has already taken");
     }
+
     setLoading(false);
   };
   return (
@@ -76,7 +85,23 @@ const Form = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-y-6 items-center"
       >
-        <h1 className="text-2xl font-bold text-thCyan">Welcome Back</h1>
+        <h1 className="text-2xl font-bold text-thCyan">Sign-up</h1>
+
+        <div className="flex flex-col">
+          <input
+            type="text"
+            defaultValue=""
+            {...register("username", { required: "This is required" })}
+            className=" py-3 pl-3 pr-4 w-[17rem] border-[1px] rounded-lg text-xs"
+            placeholder="Enter your username"
+            autoComplete="off"
+          />
+          {errors.username && (
+            <small className="text-red-600 w-[17rem] py-1">
+              *{errors.username.message?.toString()}
+            </small>
+          )}
+        </div>
         <div className="flex flex-col">
           <input
             type="email"
@@ -104,6 +129,15 @@ const Form = () => {
             </small>
           )}
         </div>
+        <div className="flex flex-col hidden">
+          <input
+            type="text"
+            defaultValue="1"
+            {...register("role")}
+            className=" py-3 pl-3 pr-4 w-[17rem] border-[1px] rounded-lg text-xs"
+            readOnly
+          />
+        </div>
         <div className="flex justify-start items-center gap-x-2 text-xs w-full">
           <input
             {...register("checkbox")}
@@ -115,11 +149,11 @@ const Form = () => {
         <input
           type="submit"
           className="bg-thCyan hover:bg-cyan-300 w-full py-3 text-white font-medium rounded-full"
-          value={loading ? "Loading..." : "Login"}
+          value={loading ? "Loading..." : "Sign-up"}
         />
       </form>
     </>
   );
 };
 
-export default Form;
+export default Formsignup;
