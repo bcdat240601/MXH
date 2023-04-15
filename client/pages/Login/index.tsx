@@ -1,4 +1,4 @@
-import Login from "../../src/components/pages/Login/Login";
+import Login from "../../src/components/pages/UserForm/Login";
 import axios from "axios";
 const Index = ({}: any) => {
   return (

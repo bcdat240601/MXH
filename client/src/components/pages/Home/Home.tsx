@@ -6,7 +6,7 @@ import Menumbl from "../../Menumbl";
 import Menutablet from "../../Menutablet";
 import Feed from "./Feed";
 import Leftbar from "./Leftbar";
-import Storyslide from "./Storyslide";
+import Storyslide from "./Story/Storyslide";
 
 const Home = ({ posts, images, user, socket }: any) => {
   console.log(user);
@@ -18,7 +18,7 @@ const Home = ({ posts, images, user, socket }: any) => {
         <Menudesktop />
         <main className="flex-1 h-screen overflow-y-scroll md:pt-6 md:grid md:place-items-center gap-y-10">
           <Header />
-          <Storyslide />
+          <Storyslide currentUser={user} />
           <section className="space-y-10">
             {posts.data.map((feed: any, index: number) => (
               <div key={index} className="pt-3">
@@ -37,7 +37,7 @@ const Home = ({ posts, images, user, socket }: any) => {
           </section>
           <Menumbl />
         </main>
-        <Leftbar username={user.username} />
+        <Leftbar currentUser={user} />
       </section>
     </>
   );

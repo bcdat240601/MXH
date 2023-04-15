@@ -18,9 +18,9 @@ const Comment = ({
       <div
         className={`${
           !id_comment_response
-            ? "comment text-[13px] md:text-sm flex px-3 gap-x-2"
+            ? "comment text-[13px] md:text-sm flex px-3 gap-x-2 "
             : "reply text-[13px] md:text-sm flex px-2 ml-6 my-3 gap-x-2 border-l-2"
-        }`}
+        } py-1.5`}
       >
         <Image
           src={Images.av1.default.src}

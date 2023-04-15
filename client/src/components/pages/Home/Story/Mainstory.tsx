@@ -1,11 +1,14 @@
 import React from "react";
-import Images from "../../../assets/images";
-const Mainstory = () => {
+import Images from "../../../../assets/images";
+import Image from "next/image";
+const Mainstory = ({ username }: any) => {
   return (
     <div>
       <div className="w-[3.8rem] h-[3.8rem]  md:w-[4.8rem] md:h-[4.8rem] rounded-full relative border-[3px] border-thRed grid place-items-center">
-        <img
+        <Image
           src={Images.av2.default.src}
+          width="500"
+          height="500"
           alt=""
           className="object-cover rounded-full w-14 md:w-16 h-14 md:h-16 border-2 border-white "
         />
@@ -16,7 +19,7 @@ const Mainstory = () => {
       </div>
       <div className="flex justify-center mt-1">
         <span className="text-xs text-ellipsis w-[70px] overflow-x-hidden">
-          WazowSki_11
+          {username}
         </span>
       </div>
     </div>

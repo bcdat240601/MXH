@@ -5,11 +5,12 @@ import SwiperCore, { Navigation, Pagination, Lazy } from "swiper";
 import "swiper/css";
 import Mainstory from "./Mainstory";
 
-const Storyslide = () => {
+const Storyslide = ({ currentUser }: any) => {
   return (
-    <div>
+    <section>
+      {/* For mobile */}
       <div className=" px-3 w-[390px] md: lg:hidden grid grid-flow-col gap-x-3 overflow-x-auto hidden-scroll py-4 md:pb-8">
-        <Mainstory />
+        <Mainstory username={currentUser.username} />
         <Story />
         <Story />
         <Story />
@@ -18,10 +19,12 @@ const Storyslide = () => {
         <Story />
         <Story />
       </div>
+      {/* For desktop */}
+
       <div className="hidden lg:block w-[39.5rem]">
         <Swiper className="mySwiper" slidesPerView={6.5}>
           <SwiperSlide>
-            <Mainstory />
+            <Mainstory username={currentUser.username} />
           </SwiperSlide>
           <SwiperSlide>
             <Story />
@@ -49,7 +52,7 @@ const Storyslide = () => {
           </SwiperSlide>
         </Swiper>
       </div>
-    </div>
+    </section>
   );
 };
 

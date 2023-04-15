@@ -98,6 +98,9 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "followings"
+    },
+    "fullname": {
+      "type": "string"
     }
   }
 }
