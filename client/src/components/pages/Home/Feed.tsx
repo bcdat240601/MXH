@@ -56,16 +56,17 @@ const Feed = ({
 
   socket.on("get-comments", async () => {
     const token = cookie.user;
-
+    console.log("socket run");
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?populate=user_comment`,
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}posts/${id_post}?populate[comments][populate][0]=user_comment&pagination[pageSize]=200`,
       {
         headers: {
           Authorization: `Bearer ${token.replaceAll('"', "")}`,
         },
       }
     );
-    setListComments(response.data.data);
+    console.log(response.data.data.attributes.comments.data);
+    setListComments(response.data.data.attributes.comments.data);
   });
   const handleSubmit = async (e: any) => {
     const token = cookie.user;
