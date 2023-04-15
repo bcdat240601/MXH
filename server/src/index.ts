@@ -34,10 +34,10 @@ export default {
           .create(message);
 
         console.log("Done");
+
         socket.to("1").emit("get-comments", () => {
           console.log("try to get comments");
         });
-        console.log("Done in 2");
       });
       socket.on("disconnect", () => {
         console.log("🔥: A user disconnected");
