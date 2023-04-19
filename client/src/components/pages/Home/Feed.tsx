@@ -24,9 +24,8 @@ const Feed = ({
   image,
   socket,
 }: any) => {
-  console.log(image);
+  console.log(comments);
 
-  console.log(comments.data[0]);
   const [cookie] = useCookies(["user"]);
   const { username } = user_post?.data.attributes;
   const inputRef = useRef<HTMLInputElement>(null);
@@ -37,8 +36,8 @@ const Feed = ({
   const [comment, setComment] = useState<boolean>(false);
   const [isReact, setIsReact] = useState<boolean>(false);
   const [listComments, setListComments] = useState<any>({
-    arrComments: [],
-    totalComments: 0,
+    arrComments: comments.data,
+    totalComments: comments.data.length,
   });
   const [currentPage, setCurrentPage] = useState(1);
   const handleReact = () => {
@@ -60,30 +59,30 @@ const Feed = ({
     }
   };
 
-  useEffect(() => {
-    const token = cookie.user;
-    const controller = new AbortController();
-    const fetchComments = async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?populate=user_comment&sort[0]=id%3Adesc`,
-        {
-          headers: {
-            Authorization: `Bearer ${token.replaceAll('"', "")}`,
-          },
-          signal: controller.signal,
-        }
-      );
-      console.log(response.data.meta.pagination.total);
-      setListComments({
-        arrComments: response.data.data,
-        totalComments: response.data.meta.pagination.total,
-      });
-    };
-    fetchComments();
-    return () => {
-      controller.abort();
-    };
-  }, []);
+  // useEffect(() => {
+  //   const token = cookie.user;
+  //   const controller = new AbortController();
+  //   const fetchComments = async () => {
+  //     const response = await axios.get(
+  //       `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?populate=user_comment&sort[0]=id%3Adesc`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token.replaceAll('"', "")}`,
+  //         },
+  //         signal: controller.signal,
+  //       }
+  //     );
+  //     console.log(response.data.data);
+  //     setListComments({
+  //       arrComments: response.data.data,
+  //       totalComments: response.data.meta.pagination.total,
+  //     });
+  //   };
+  //   fetchComments();
+  //   return () => {
+  //     controller.abort();
+  //   };
+  // }, []);
 
   socket.on("get-comments", async () => {
     const token = cookie.user;
@@ -104,7 +103,7 @@ const Feed = ({
   });
   const handleSubmit = async (e: any) => {
     const token = cookie.user;
-
+    console.log(id_post);
     e.preventDefault();
     const comment = inputRef.current?.value || "";
     const commentData = {
@@ -233,9 +232,12 @@ const Feed = ({
               />
             </div>
           ))}
-          <div className="px-4" onClick={handleSeeMore}>
-            <button>Xem thêm</button>
-          </div>
+          {listComments.arrComments.length > 10 && (
+            <div className="px-4" onClick={handleSeeMore}>
+              <button>Xem thêm</button>
+            </div>
+          )}
+
           <form
             onSubmit={(e) => handleSubmit(e)}
             className="flex flex-row pr-4"

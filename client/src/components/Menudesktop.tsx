@@ -18,7 +18,7 @@ import Desktopitem from "./Desktopitem";
 import Desktopfeature from "./Desktopfeature";
 import Search from "./Feature/Search";
 import Post from "./Feature/Post";
-const Menudesktop = () => {
+const Menudesktop = ({ currentUser }: any) => {
   const [isMenu, setisMenu] = useState(false);
   const [checkInout, setcheckInout] = useState(true);
   const [mode, setmode] = useState(0);
@@ -191,7 +191,7 @@ const Menudesktop = () => {
           className={`overlay w-screen h-full bg-black ${isPost.overlay} absolute top-0 left-0 ease-in duration-300 z-20`}
           onClick={handlePost}
         ></div>
-        <Post css={isPost.css} />
+        <Post css={isPost.css} currentUser={currentUser} />
       </section>
     </div>
   );

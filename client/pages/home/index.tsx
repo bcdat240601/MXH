@@ -59,6 +59,7 @@ export async function getServerSideProps(ctx: any) {
       },
     }
   );
+
   return {
     props: {
       postData: posts.data,

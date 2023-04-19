@@ -10,7 +10,7 @@ import Images from "../../assets/images";
 type Inputs = {
   caption: string;
 };
-const Post = ({ css }: any) => {
+const Post = ({ css, currentUser }: any) => {
   const [files, setfiles] = useState<any>([]);
   const [formData, setFormData] = useState(new FormData());
 
@@ -81,7 +81,7 @@ const Post = ({ css }: any) => {
   } else {
     console.log("FormData is empty");
   }
-  console.log(files);
+
   const props: UploadProps = {
     name: "file",
     multiple: true,
@@ -107,7 +107,7 @@ const Post = ({ css }: any) => {
               className="w-8 h-8 rounded-full object-cover"
             />
             <div className="text-[13px] md:text-sm">
-              <p className="font-bold">.CloneSki</p>
+              <p className="font-bold">{currentUser?.username}</p>
             </div>
           </div>
           <form

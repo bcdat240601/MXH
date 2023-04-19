@@ -15,22 +15,26 @@ const Home = ({ posts, images, user, socket }: any) => {
     <>
       <section className="flex h-screen">
         <Menutablet />
-        <Menudesktop />
+        <Menudesktop currentUser={user} />
         <main className="flex-1 h-screen overflow-y-scroll md:pt-6 md:grid md:place-items-center gap-y-10">
           <Header />
           <Storyslide currentUser={user} />
           <section className="space-y-10">
-            {posts.data.map((feed: any, index: number) => (
-              <div key={index} className="pt-3">
-                <Feed
-                  currentUser={user}
-                  id_post={index + 1}
-                  socket={socket}
-                  {...feed.attributes}
-                  image={images.data[index]?.attributes.files}
-                />
-              </div>
-            ))}
+            {posts.data.map((feed: any, index: number) => {
+              console.log(feed);
+              return (
+                <div key={index} className="pt-3">
+                  <Feed
+                    currentUser={user}
+                    id_post={feed.id}
+                    socket={socket}
+                    comments={feed.attributes.comments.data}
+                    {...feed.attributes}
+                    image={images.data[index]?.attributes.files}
+                  />
+                </div>
+              );
+            })}
           </section>
           <section>
             <div className="h-20 md:hidden"></div>
