@@ -9,8 +9,8 @@ import Leftbar from "./Leftbar";
 import Storyslide from "./Storyslide";
 
 const Home = ({ posts, images, user, socket }: any) => {
-  console.log(user);
-
+  // console.log(user);
+  // console.log(images.data[2]?.attributes.files);
   return (
     <>
       <section className="flex h-screen">
@@ -27,7 +27,7 @@ const Home = ({ posts, images, user, socket }: any) => {
                   id_post={index + 1}
                   socket={socket}
                   {...feed.attributes}
-                  image={images.data[0].attributes.files}
+                  image={images.data[index]?.attributes.files}
                 />
               </div>
             ))}

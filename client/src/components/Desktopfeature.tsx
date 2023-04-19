@@ -1,21 +1,18 @@
 import React from "react";
 import { BiBell } from "react-icons/bi";
 import { icons } from "react-icons/lib";
-const Desktopitem = ({
+const Desktopfeature = ({
   id,
   icon,
+  iconActive,
   title,
   number,
   checkInout,
-  inout_transform,
   mode,
   setmode,
 }: any) => {
   const handleMode = () => {
-    setmode(id);
-    if (id === 5 || id === 2) {
-      inout_transform(id);
-    }
+    mode ? setmode("") : setmode(id);
   };
   return (
     <div
@@ -28,15 +25,11 @@ const Desktopitem = ({
             {number}
           </div>
         )}
-        <div
-          className={`${mode === id && "bg-thGraytwo px-1 py-1 rounded-md"}`}
-        >
-          {icon}
-        </div>
+        <div>{mode === id ? iconActive : icon}</div>
       </div>
       {checkInout && <p>{title}</p>}
     </div>
   );
 };
 
-export default Desktopitem;
+export default Desktopfeature;

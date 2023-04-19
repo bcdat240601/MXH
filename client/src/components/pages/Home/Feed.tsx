@@ -24,6 +24,8 @@ const Feed = ({
   image,
   socket,
 }: any) => {
+  console.log(image);
+
   console.log(comments.data[0]);
   const [cookie] = useCookies(["user"]);
   const { username } = user_post?.data.attributes;
@@ -124,7 +126,7 @@ const Feed = ({
       </aside>
       <aside>
         <Image
-          src={`${process.env.NEXT_PUBLIC_HOSTNAME}${image.data[0].attributes.formats.medium.url}`}
+          src={`${process.env.NEXT_PUBLIC_HOSTNAME}${image.data[0].attributes.formats.thumbnail.url}`}
           alt="posts"
           className="object-cover w-full h-[17.5rem] md:h-[36.5rem]"
           width={1000}
