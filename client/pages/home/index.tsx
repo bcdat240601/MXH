@@ -32,7 +32,7 @@ export async function getServerSideProps(ctx: any) {
   const token = parseCookies(ctx.req);
 
   const posts = await axios.get(
-    `${process.env.NEXT_PUBLIC_CLIENT_URL}posts?populate[comments][populate][0]=user_comment&populate=user_post&sort[0]=id%3Adesc`,
+    `${process.env.NEXT_PUBLIC_CLIENT_URL}posts?populate[comments][populate][0]=user_comment&populate=user_post`,
     {
       headers: {
         "Content-Type": "application/json; charset=utf-8",

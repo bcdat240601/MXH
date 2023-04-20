@@ -9,8 +9,7 @@ import Leftbar from "./Leftbar";
 import Storyslide from "./Story/Storyslide";
 
 const Home = ({ posts, images, user, socket }: any) => {
-  // console.log(user);
-  // console.log(images.data[2]?.attributes.files);
+  console.log(images);
   return (
     <>
       <section className="flex h-screen">
