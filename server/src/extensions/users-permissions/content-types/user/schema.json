@@ -103,6 +103,18 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "followings"
+    },
+    "like": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::post.post",
+      "mappedBy": "beliked"
+    },
+    "userwatching": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::story.story",
+      "mappedBy": "watcheduser"
     }
   }
 }
