@@ -22,10 +22,9 @@ const Feed = ({
   comments,
   user_post,
   image,
+  likes,
   socket,
 }: any) => {
-  console.log(comments);
-
   const [cookie] = useCookies(["user"]);
   const { username } = user_post?.data.attributes;
   const inputRef = useRef<HTMLInputElement>(null);
@@ -34,20 +33,53 @@ const Feed = ({
   const [unlike] = useSound("./assets/sounds/unsavingSound.mp3");
   const [isShow, setIsShow] = useState(false);
   const [comment, setComment] = useState<boolean>(false);
-  const [isReact, setIsReact] = useState<boolean>(false);
+  const [isReact, setIsReact] = useState<any>({
+    status: likes.data.find((like: any) => {
+      return like.attributes.username === currentUser.username;
+    })
+      ? true
+      : false,
+    idPost: 0,
+    // arrLikes: [likes.data.map((like: any) => like.id)],
+    totalLikes: likes.data.length,
+  });
+  console.log(isReact.status);
   const [listComments, setListComments] = useState<any>({
     arrComments: comments.data,
     totalComments: comments.data.length,
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const handleReact = () => {
-    if (isReact === true) {
+  const handleReact = async (idPost: any) => {
+    let likeData = {};
+    let newData = likes.data.map((like: any) => like.id);
+    if (isReact.status === true) {
       unlike();
-      setIsReact(false);
+      console.log(newData.filter((data: number) => data !== currentUser.id));
+      likeData = {
+        data: {
+          beliked: newData.filter((data: number) => data !== currentUser.id),
+        },
+      };
+      setIsReact({
+        idPost,
+        status: false,
+        totalLikes: isReact.totalLikes - 1,
+      });
     } else {
       like();
-      setIsReact(true);
+      likeData = {
+        data: {
+          beliked: [...newData, currentUser.id],
+        },
+      };
+      setIsReact({
+        idPost,
+        status: true,
+        totalLikes: isReact.totalLikes + 1,
+      });
+      console.log(likeData);
     }
+    await socket.emit("post", id_post, likeData);
   };
   const handleShow = () => {
     if (isShow === true) {
@@ -58,31 +90,6 @@ const Feed = ({
       setIsShow(true);
     }
   };
-
-  // useEffect(() => {
-  //   const token = cookie.user;
-  //   const controller = new AbortController();
-  //   const fetchComments = async () => {
-  //     const response = await axios.get(
-  //       `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?populate=user_comment&sort[0]=id%3Adesc`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token.replaceAll('"', "")}`,
-  //         },
-  //         signal: controller.signal,
-  //       }
-  //     );
-  //     console.log(response.data.data);
-  //     setListComments({
-  //       arrComments: response.data.data,
-  //       totalComments: response.data.meta.pagination.total,
-  //     });
-  //   };
-  //   fetchComments();
-  //   return () => {
-  //     controller.abort();
-  //   };
-  // }, []);
 
   socket.on("get-comments", async () => {
     const token = cookie.user;
@@ -101,6 +108,7 @@ const Feed = ({
       arrComments: response.data.data,
     });
   });
+
   const handleSubmit = async (e: any) => {
     const token = cookie.user;
     console.log(id_post);
@@ -123,7 +131,7 @@ const Feed = ({
       ],
       totalComments: listComments.totalComments + 1,
     });
-    socket.off("comment");
+    // socket.off("comment");
 
     //lỗi sau này sẽ tìm cách sửa (nhưng mà chạy được)
     // inputRef.current.value = "";
@@ -193,16 +201,16 @@ const Feed = ({
       </aside>
       <aside className="px-3 flex items-center gap-x-3">
         <div className="flex gap-x-1 items-center text-thMagenta">
-          {isReact ? (
-            <div onClick={handleReact}>
+          {isReact.status ? (
+            <div onClick={() => handleReact(id_post)}>
               <AiFillHeart size={30} />
             </div>
           ) : (
-            <div className="text-thDark" onClick={handleReact}>
+            <div className="text-thDark" onClick={() => handleReact(id_post)}>
               <AiOutlineHeart size={30} />
             </div>
           )}
-          <span className="text-xs text-thGray">4K</span>
+          <span className="text-xs text-thGray">{isReact.totalLikes}</span>
         </div>
         <div className="flex gap-x-1 items-center text-thGray">
           <div

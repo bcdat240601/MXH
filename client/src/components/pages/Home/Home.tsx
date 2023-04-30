@@ -8,7 +8,7 @@ import Feed from "./Feed";
 import Leftbar from "./Leftbar";
 import Storyslide from "./Story/Storyslide";
 
-const Home = ({ posts, images, user, socket }: any) => {
+const Home = ({ posts, images, user, socket, likes }: any) => {
   console.log(images);
   return (
     <>
@@ -30,6 +30,7 @@ const Home = ({ posts, images, user, socket }: any) => {
                     comments={feed.attributes.comments.data}
                     {...feed.attributes}
                     image={images.data[index]?.attributes.files}
+                    likes={likes.data[index]?.attributes.beliked}
                   />
                 </div>
               );
