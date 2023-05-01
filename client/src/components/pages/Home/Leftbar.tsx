@@ -1,8 +1,14 @@
 import React from "react";
+//library
+import { useRouter } from "next/router";
+//components
 import Images from "../../../assets/images";
 import Suggest from "./Suggest";
 import Image from "next/image";
-const Leftbar = () => {
+import { useCookies } from "react-cookie";
+const Leftbar = ({ currentUser }: any) => {
+  const router = useRouter();
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   return (
     <div className="left_bar w-[30rem] pl-5 pr-14 pt-12 hidden lg:block">
       <div className="flex items-center justify-between">
@@ -15,11 +21,19 @@ const Leftbar = () => {
             height={100}
           />
           <div className="text-[13px] md:text-sm">
-            <p className="font-bold">.WazowSki_11</p>
-            <span className="text-thGray">Mike WazowSki</span>
+            <p className="font-bold">{currentUser.username}</p>
+            <span className="text-thGray">{currentUser.fullname}</span>
           </div>
         </div>
-        <p className="font-semibold text-thBlue text-xs">Đăng Xuất</p>
+        <p
+          onClick={() => {
+            removeCookie("user", { path: "/" });
+            router.push("/");
+          }}
+          className="font-semibold text-thBlue text-xs cursor-pointer"
+        >
+          Đăng Xuất
+        </p>
       </div>
       <div>
         <div className="flex justify-between items-center py-5">

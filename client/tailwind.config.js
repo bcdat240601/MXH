@@ -18,7 +18,11 @@ module.exports = {
         thMagenta: "#BB2649",
         thGreen: "#21fa90",
         thGray: "#2F4550",
+        thGraytwo: "#ebebeb",
         thRed: "#ff3040",
+      },
+      transitionProperty: {
+        width: "width",
       },
     },
   },
