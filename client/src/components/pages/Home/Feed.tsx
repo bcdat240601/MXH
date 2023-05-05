@@ -22,11 +22,9 @@ const Feed = ({
   comments,
   user_post,
   image,
+  likes,
   socket,
 }: any) => {
-  console.log(image);
-
-  console.log(comments.data[0]);
   const [cookie] = useCookies(["user"]);
   const { username } = user_post?.data.attributes;
   const inputRef = useRef<HTMLInputElement>(null);
@@ -35,16 +33,53 @@ const Feed = ({
   const [unlike] = useSound("./assets/sounds/unsavingSound.mp3");
   const [isShow, setIsShow] = useState(false);
   const [comment, setComment] = useState<boolean>(false);
-  const [isReact, setIsReact] = useState<boolean>(false);
-  const [listComments, setListComments] = useState<any>(comments.data);
-  const handleReact = () => {
-    if (isReact === true) {
+  const [isReact, setIsReact] = useState<any>({
+    status: likes.data.find((like: any) => {
+      return like.attributes.username === currentUser.username;
+    })
+      ? true
+      : false,
+    idPost: 0,
+    // arrLikes: [likes.data.map((like: any) => like.id)],
+    totalLikes: likes.data.length,
+  });
+  console.log(isReact.status);
+  const [listComments, setListComments] = useState<any>({
+    arrComments: comments.data,
+    totalComments: comments.data.length,
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const handleReact = async (idPost: any) => {
+    let likeData = {};
+    let newData = likes.data.map((like: any) => like.id);
+    if (isReact.status === true) {
       unlike();
-      setIsReact(false);
+      console.log(newData.filter((data: number) => data !== currentUser.id));
+      likeData = {
+        data: {
+          beliked: newData.filter((data: number) => data !== currentUser.id),
+        },
+      };
+      setIsReact({
+        idPost,
+        status: false,
+        totalLikes: isReact.totalLikes - 1,
+      });
     } else {
       like();
-      setIsReact(true);
+      likeData = {
+        data: {
+          beliked: [...newData, currentUser.id],
+        },
+      };
+      setIsReact({
+        idPost,
+        status: true,
+        totalLikes: isReact.totalLikes + 1,
+      });
+      console.log(likeData);
     }
+    await socket.emit("post", id_post, likeData);
   };
   const handleShow = () => {
     if (isShow === true) {
@@ -60,19 +95,23 @@ const Feed = ({
     const token = cookie.user;
     console.log("socket run");
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_CLIENT_URL}posts/${id_post}?populate[comments][populate][0]=user_comment&pagination[pageSize]=200`,
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?populate=user_comment&sort[0]=id%3Adesc`,
       {
         headers: {
           Authorization: `Bearer ${token.replaceAll('"', "")}`,
         },
       }
     );
-    console.log(response.data.data.attributes.comments.data);
-    setListComments(response.data.data.attributes.comments.data);
+    console.log(response.data.data);
+    setListComments({
+      totalComments: listComments.totalComments + 1,
+      arrComments: response.data.data,
+    });
   });
+
   const handleSubmit = async (e: any) => {
     const token = cookie.user;
-
+    console.log(id_post);
     e.preventDefault();
     const comment = inputRef.current?.value || "";
     const commentData = {
@@ -84,14 +123,37 @@ const Feed = ({
       },
     };
     await socket.emit("comment", commentData);
-    setListComments([
-      ...listComments,
-      { attributes: { ...commentData.data, username: currentUser.username } },
-    ]);
-    socket.off("comment");
+    console.log(listComments.totalComments);
+    setListComments({
+      arrComments: [
+        ...listComments.arrComments,
+        { attributes: { ...commentData.data, username: currentUser.username } },
+      ],
+      totalComments: listComments.totalComments + 1,
+    });
+    // socket.off("comment");
 
     //lỗi sau này sẽ tìm cách sửa (nhưng mà chạy được)
     // inputRef.current.value = "";
+  };
+
+  const handleSeeMore = async () => {
+    const token = cookie.user;
+    console.log("See more");
+    setCurrentPage((prevValue) => prevValue + 1);
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?populate=user_comment&sort[0]=id%3Adesc&pagination[page]=${currentPage}&pagination[pageSize]=10`,
+      {
+        headers: {
+          Authorization: `Bearer ${token.replaceAll('"', "")}`,
+        },
+      }
+    );
+    console.log(listComments.totalComments);
+    setListComments({
+      totalComments: listComments.totalComments,
+      arrComments: [...listComments.arrComments, ...response.data.data],
+    });
   };
 
   //UI
@@ -139,16 +201,16 @@ const Feed = ({
       </aside>
       <aside className="px-3 flex items-center gap-x-3">
         <div className="flex gap-x-1 items-center text-thMagenta">
-          {isReact ? (
-            <div onClick={handleReact}>
+          {isReact.status ? (
+            <div onClick={() => handleReact(id_post)}>
               <AiFillHeart size={30} />
             </div>
           ) : (
-            <div className="text-thDark" onClick={handleReact}>
+            <div className="text-thDark" onClick={() => handleReact(id_post)}>
               <AiOutlineHeart size={30} />
             </div>
           )}
-          <span className="text-xs text-thGray">4K</span>
+          <span className="text-xs text-thGray">{isReact.totalLikes}</span>
         </div>
         <div className="flex gap-x-1 items-center text-thGray">
           <div
@@ -158,12 +220,16 @@ const Feed = ({
           >
             <AiOutlineComment size={25} />
           </div>
-          <span className="text-xs ">{listComments.length}</span>
+          <span className="text-xs ">{listComments.totalComments}</span>
         </div>
       </aside>
-      <aside className={`comment area py-3 ${comment ? "block" : "hidden"}`}>
+      <aside
+        className={`comment area py-3 ${comment ? "block" : "hidden"} ${
+          currentPage === 2 && "h-80 overflow-y-auto"
+        }`}
+      >
         <div>
-          {listComments.map((comment: any) => (
+          {listComments.arrComments.map((comment: any) => (
             <div key={comment.id}>
               <Comment
                 username={
@@ -174,14 +240,25 @@ const Feed = ({
               />
             </div>
           ))}
-          <form onSubmit={(e) => handleSubmit(e)}>
+          {listComments.arrComments.length > 10 && (
+            <div className="px-4" onClick={handleSeeMore}>
+              <button>Xem thêm</button>
+            </div>
+          )}
+
+          <form
+            onSubmit={(e) => handleSubmit(e)}
+            className="flex flex-row pr-4"
+          >
             <input
               type="text"
               className="outline-none border-none px-3 bg-thWhite w-full mt-3"
               placeholder="Add comment"
               ref={inputRef}
             />
-            <button type="submit">Send</button>
+            <button className="text-thBlue" type="submit">
+              Send
+            </button>
           </form>
         </div>
       </aside>

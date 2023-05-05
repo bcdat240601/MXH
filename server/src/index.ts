@@ -39,6 +39,18 @@ export default {
           console.log("try to get comments");
         });
       });
+      socket.on("post", async (postId, arrLike) => {
+        console.log(arrLike);
+        const data = await strapi
+          .service("api::post.post")
+          .update(postId, arrLike);
+        console.log(data);
+        console.log("Done");
+
+        socket.to("1").emit("get-likes", () => {
+          console.log("try to get likes");
+        });
+      });
       socket.on("disconnect", () => {
         console.log("🔥: A user disconnected");
       });

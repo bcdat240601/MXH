@@ -6,38 +6,42 @@ import Menumbl from "../../Menumbl";
 import Menutablet from "../../Menutablet";
 import Feed from "./Feed";
 import Leftbar from "./Leftbar";
-import Storyslide from "./Storyslide";
+import Storyslide from "./Story/Storyslide";
 
-const Home = ({ posts, images, user, socket }: any) => {
-  // console.log(user);
-  // console.log(images.data[2]?.attributes.files);
+const Home = ({ posts, images, user, socket, likes }: any) => {
+  console.log(images);
   return (
     <>
       <section className="flex h-screen">
         <Menutablet />
-        <Menudesktop />
+        <Menudesktop currentUser={user} />
         <main className="flex-1 h-screen overflow-y-scroll md:pt-6 md:grid md:place-items-center gap-y-10">
           <Header />
-          <Storyslide />
+          <Storyslide currentUser={user} />
           <section className="space-y-10">
-            {posts.data.map((feed: any, index: number) => (
-              <div key={index} className="pt-3">
-                <Feed
-                  currentUser={user}
-                  id_post={index + 1}
-                  socket={socket}
-                  {...feed.attributes}
-                  image={images.data[index]?.attributes.files}
-                />
-              </div>
-            ))}
+            {posts.data.map((feed: any, index: number) => {
+              console.log(feed);
+              return (
+                <div key={index} className="pt-3">
+                  <Feed
+                    currentUser={user}
+                    id_post={feed.id}
+                    socket={socket}
+                    comments={feed.attributes.comments.data}
+                    {...feed.attributes}
+                    image={images.data[index]?.attributes.files}
+                    likes={likes.data[index]?.attributes.beliked}
+                  />
+                </div>
+              );
+            })}
           </section>
           <section>
             <div className="h-20 md:hidden"></div>
           </section>
           <Menumbl />
         </main>
-        <Leftbar username={user.username} />
+        <Leftbar currentUser={user} />
       </section>
     </>
   );

@@ -4,7 +4,7 @@ import { useState } from "react";
 import io from "socket.io-client";
 
 import { parseCookies } from "@/helpers";
-const Index = ({ postData, imgData, userData }: any) => {
+const Index = ({ postData, imgData, userData, likesData }: any) => {
   const socket = io("http://127.0.0.1:1337", {
     transports: ["websocket"],
   });
@@ -21,6 +21,7 @@ const Index = ({ postData, imgData, userData }: any) => {
           posts={postData}
           images={imgData}
           user={userData}
+          likes={likesData}
         />
       </section>
     </>
@@ -50,6 +51,17 @@ export async function getServerSideProps(ctx: any) {
       },
     }
   );
+
+  const listLike = await axios.get(
+    `${process.env.NEXT_PUBLIC_CLIENT_URL}posts?populate=beliked`,
+    {
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        Authorization: `Bearer ${token.user.replaceAll('"', "")}`,
+      },
+    }
+  );
+
   const user = await axios.get(
     `${process.env.NEXT_PUBLIC_CLIENT_URL}users/me`,
     {
@@ -59,11 +71,13 @@ export async function getServerSideProps(ctx: any) {
       },
     }
   );
+
   return {
     props: {
       postData: posts.data,
       imgData: images.data,
       userData: user.data,
+      likesData: listLike.data,
     },
   };
 }

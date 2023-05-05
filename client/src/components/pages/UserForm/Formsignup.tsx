@@ -11,6 +11,7 @@ const schema = yup
     role: yup.string(),
     username: yup.string().required(),
     email: yup.string().required(),
+    fullname: yup.string().required(),
     password: yup
       .string()
       .required()
@@ -57,7 +58,8 @@ const Formsignup = () => {
       username: data.username,
       email: data.email,
       password: data.password,
-      role: data.role,
+      fullname: data.fullname,
+      role: 1,
     };
     try {
       const response = await axios.post(
@@ -120,8 +122,10 @@ const Formsignup = () => {
           <input
             type="password"
             className=" py-3 pl-3 pr-4 w-[17rem] border-[1px] rounded-lg text-xs"
-            placeholder="password"
-            {...register("password", { required: "This is required" })}
+            placeholder="Enter your password"
+            {...register("password", {
+              required: "This is required",
+            })}
           />
           {errors.password && (
             <small className="text-red-600 w-[17rem] py-1">
@@ -129,7 +133,20 @@ const Formsignup = () => {
             </small>
           )}
         </div>
-        <div className="flex flex-col hidden">
+        <div className="flex flex-col">
+          <input
+            type="text"
+            className=" py-3 pl-3 pr-4 w-[17rem] border-[1px] rounded-lg text-xs"
+            placeholder="Enter your fullname"
+            {...register("fullname", { required: "This is required" })}
+          />
+          {errors.fullname && (
+            <small className="text-red-600 w-[17rem] py-1">
+              *{errors.fullname.message?.toString()}
+            </small>
+          )}
+        </div>
+        {/* <div className="flex flex-col hidden">
           <input
             type="text"
             defaultValue="1"
@@ -137,7 +154,8 @@ const Formsignup = () => {
             className=" py-3 pl-3 pr-4 w-[17rem] border-[1px] rounded-lg text-xs"
             readOnly
           />
-        </div>
+        </div> */}
+
         <div className="flex justify-start items-center gap-x-2 text-xs w-full">
           <input
             {...register("checkbox")}
