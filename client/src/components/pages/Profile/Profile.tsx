@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import { MdSettings } from "react-icons/md";
 import { HiPencil } from "react-icons/hi";
@@ -10,17 +10,14 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Menutablet from "../../Menutablet";
 import Menudesktop from "../../Menudesktop";
-const Profile = () => {
+import axios from "axios";
+const Profile = ({ user }: any) => {
   const [isOwn, setisOwn] = useState(0);
-  const posts = [
-    { img: Images.photo1.default.src },
-    { img: Images.photo2.default.src },
-    { img: Images.photo1.default.src },
-  ];
   const router = useRouter();
   const handleGoBack = () => {
     router.back();
   };
+
   return (
     <div className="md:flex lg:grid layout">
       <div className="hidden md:block">
@@ -47,8 +44,8 @@ const Profile = () => {
               />
             </div>
             <div className="flex flex-col items-center mt-5">
-              <p className="font-semibold text-lg ">ChuongBoiDev</p>
-              <span className="text-gray-400">nguywn Ngoc Buong</span>
+              <p className="font-semibold text-lg ">{user.fullname}</p>
+              <span className="text-gray-400">{user.username}</span>
             </div>
             <div className="flex items-center justify-around px-10 mt-5">
               <div className="flex flex-col items-center">
@@ -60,7 +57,7 @@ const Profile = () => {
                 <span className="text-gray-400">follower</span>
               </div>
               <div className="flex flex-col items-center">
-                <p className="font-bold">55</p>
+                <p className="font-bold">{user.posts.length}</p>
                 <span className="text-gray-400">Post</span>
               </div>
             </div>
@@ -90,7 +87,7 @@ const Profile = () => {
           )}
         </section>
         <section>
-          <Postlist postList={posts} />
+          <Postlist postList={user.post} />
         </section>
         <Menumbl />
       </main>
@@ -105,7 +102,7 @@ const Profile = () => {
           </div>
           <article className="flex-1 h-fit">
             <div className="flex gap-x-20">
-              <p className="font-semibold text-lg ">ChuongBoiDev</p>
+              <p className="font-semibold text-lg ">{user.fullname}</p>
               <div>
                 <MdSettings size={25} />
               </div>
@@ -120,11 +117,11 @@ const Profile = () => {
                 <span className="text-gray-400">follower</span>
               </div>
               <div className="flex flex-col items-center">
-                <p className="font-bold">55</p>
+                <p className="font-bold">{user.posts.length}</p>
                 <span className="text-gray-400">Post</span>
               </div>
             </div>
-            <span className="text-gray-400 mt-5">nguywn Ngoc Buong</span>
+            <span className="text-gray-400 mt-5">{user.username}</span>
             {isOwn === 1 ? (
               <article>
                 <div className="mt-5 flex items-center  gap-x-2">
@@ -151,7 +148,7 @@ const Profile = () => {
           </article>
         </section>
         <section className=" mt-5">
-          <Postlist postList={posts} />
+          <Postlist postList={user.posts} />
         </section>
       </main>
     </div>
