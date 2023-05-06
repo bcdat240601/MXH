@@ -157,7 +157,9 @@ const Menudesktop = ({ currentUser }: any) => {
               alt=""
               className="w-7 h-7 rounded-full object-cover"
             />
-            {checkInout && <p>Trang Cá Nhân</p>}
+            {checkInout && (
+              <a href={`/profile/${currentUser.id}`}>Trang Cá Nhân</a>
+            )}
           </div>
         </div>
 

@@ -11,7 +11,8 @@ import Link from "next/link";
 import Menutablet from "../../Menutablet";
 import Menudesktop from "../../Menudesktop";
 import axios from "axios";
-const Profile = ({ user }: any) => {
+const Profile = ({ user, currentUser }: any) => {
+  console.log(user);
   const [isOwn, setisOwn] = useState(0);
   const router = useRouter();
   const handleGoBack = () => {
@@ -21,7 +22,7 @@ const Profile = ({ user }: any) => {
   return (
     <div className="md:flex lg:grid layout">
       <div className="hidden md:block">
-        <Menudesktop />
+        <Menudesktop currentUser={currentUser} />
         <Menutablet />
       </div>
       <main className="mbl-profile md:hidden w-full     ">
