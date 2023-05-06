@@ -37,3 +37,10 @@ body {
   background-color: #c6c6c6;
   border-radius: 99px;
 }
+.border-ava {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='100' ry='100' stroke='%23FF76B6FF' stroke-width='8' stroke-dasharray='40%25%2c 38%25' stroke-dashoffset='37' stroke-linecap='butt'/%3e%3c/svg%3e");
+  border-radius: 100px;
+}
+.layout {
+  grid-template-columns: minmax(14rem, 30%) 1fr;
+}
