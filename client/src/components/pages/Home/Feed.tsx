@@ -178,7 +178,10 @@ const Feed = ({
             height={1000}
           />
           <div className="text-[13px] md:text-sm">
-            <p className="font-bold">{username}</p>
+            <a href={`/profile/${user_post?.data.id}`} className="font-bold">
+              {username}
+            </a>
+            <br />
             <span className="text-thGray">45 min ago</span>
           </div>
         </div>

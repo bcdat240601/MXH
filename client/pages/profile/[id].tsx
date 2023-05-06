@@ -1,7 +1,8 @@
+import { parseCookies } from "@/helpers";
 import Profile from "../../src/components/pages/Profile/Profile";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { parseCookies } from "@/helpers";
+
 const Index = ({ id, user, currentUser }: any) => {
   return (
     <div>

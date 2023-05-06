@@ -61,7 +61,7 @@ const Form = () => {
     } else {
       setCookie("user", JSON.stringify(response.data.jwt), {
         path: "/",
-        maxAge: 3600, // Expires after 1hr
+        maxAge: 3600 * 24, // Expires after 1hr
         sameSite: true,
       });
       window.location.replace("/home");

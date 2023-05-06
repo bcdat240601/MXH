@@ -18,14 +18,14 @@ import Desktopitem from "./Desktopitem";
 import Desktopfeature from "./Desktopfeature";
 import Search from "./Feature/Search";
 import Post from "./Feature/Post";
+const items = [
+  { id: 2, icon: <AiOutlineSearch size={26} />, title: "Tìm Kiếm" },
+  { id: 5, icon: <BiBell size={26} />, title: "Thông Báo", number: 1 },
+];
 const Menudesktop = ({ currentUser }: any) => {
   const [isMenu, setisMenu] = useState(false);
   const [checkInout, setcheckInout] = useState(true);
   const [mode, setmode] = useState(0);
-  const items = [
-    { id: 2, icon: <AiOutlineSearch size={26} />, title: "Tìm Kiếm" },
-    { id: 5, icon: <BiBell size={26} />, title: "Thông Báo", number: 1 },
-  ];
   const items2 = [
     // { id: 1, icon: <AiTwotoneHome size={26} />, title: "Trang Chủ" },
     {
@@ -158,7 +158,9 @@ const Menudesktop = ({ currentUser }: any) => {
               className="w-7 h-7 rounded-full object-cover"
             />
             {checkInout && (
-              <a href={`/profile/${currentUser.id}`}>Trang Cá Nhân</a>
+              <a href={`/profile/${currentUser && currentUser?.id}`}>
+                Trang Cá Nhân
+              </a>
             )}
           </div>
         </div>
