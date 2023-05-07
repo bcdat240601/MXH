@@ -11,12 +11,34 @@ import Link from "next/link";
 import Menutablet from "../../Menutablet";
 import Menudesktop from "../../Menudesktop";
 import axios from "axios";
-const Profile = ({ user, currentUser }: any) => {
-  console.log(user);
+const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
+  console.log(followers.length, followings.length);
   const [isOwn, setisOwn] = useState(0);
+
+  const [isfollow, setIsFollow] = useState({
+    status: false,
+  });
+
   const router = useRouter();
   const handleGoBack = () => {
     router.back();
+  };
+
+  const handleReact = async (idUser: any) => {
+    let followData = {};
+    if (isfollow.status === true) {
+      //setisFollow
+    } else {
+      followData = {
+        data: {
+          user_follower: idUser,
+          user_following: user.id,
+        },
+      };
+      //setisFollow
+      console.log(followData);
+      await socket.emit("follow", followData);
+    }
   };
 
   return (
@@ -50,11 +72,11 @@ const Profile = ({ user, currentUser }: any) => {
             </div>
             <div className="flex items-center justify-around px-10 mt-5">
               <div className="flex flex-col items-center">
-                <p className="font-bold">10K</p>
+                <p className="font-bold">{followings.length}</p>
                 <span className="text-gray-400">following</span>
               </div>
               <div className="flex flex-col items-center">
-                <p className="font-bold">6K</p>
+                <p className="font-bold">{followers.length}</p>
                 <span className="text-gray-400">follower</span>
               </div>
               <div className="flex flex-col items-center">
@@ -110,11 +132,11 @@ const Profile = ({ user, currentUser }: any) => {
             </div>
             <div className="flex items-center gap-x-10 my-3">
               <div className="flex flex-col items-center">
-                <p className="font-bold">10K</p>
+                <p className="font-bold">{followings.length}</p>
                 <span className="text-gray-400">following</span>
               </div>
               <div className="flex flex-col items-center">
-                <p className="font-bold">6K</p>
+                <p className="font-bold">{followers.length}</p>
                 <span className="text-gray-400">follower</span>
               </div>
               <div className="flex flex-col items-center">

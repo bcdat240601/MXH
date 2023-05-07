@@ -39,6 +39,18 @@ export default {
           console.log("try to get comments");
         });
       });
+
+      socket.on("follow", async (message) => {
+        console.log(message);
+        const data = await strapi.service("api::follow.follow").create(message);
+
+        console.log("Done");
+
+        socket.to("1").emit("get-follows", () => {
+          console.log("try to get comments");
+        });
+      });
+
       socket.on("post", async (postId, arrLike) => {
         console.log(arrLike);
         const data = await strapi

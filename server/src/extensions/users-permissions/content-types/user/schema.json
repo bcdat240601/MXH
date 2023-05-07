@@ -78,26 +78,8 @@
     "followers": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "plugin::users-permissions.user",
+      "target": "api::follow.follow",
       "mappedBy": "user_follower"
-    },
-    "user_follower": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "followers"
-    },
-    "followings": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "plugin::users-permissions.user",
-      "mappedBy": "user_following"
-    },
-    "user_following": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "followings"
     },
     "fullname": {
       "type": "string"
@@ -113,6 +95,12 @@
       "relation": "manyToMany",
       "target": "api::story.story",
       "mappedBy": "watcheduser"
+    },
+    "followings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::follow.follow",
+      "mappedBy": "user_following"
     }
   }
 }

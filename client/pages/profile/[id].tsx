@@ -2,11 +2,26 @@ import { parseCookies } from "@/helpers";
 import Profile from "../../src/components/pages/Profile/Profile";
 import { useRouter } from "next/router";
 import axios from "axios";
+import io from "socket.io-client";
 
-const Index = ({ id, user, currentUser }: any) => {
+const Index = ({ id, user, currentUser, followers, followings }: any) => {
+  const socket = io("http://127.0.0.1:1337", {
+    transports: ["websocket"],
+  });
+  socket.on("connect", function () {
+    console.log("Connected to WS server");
+
+    console.log(socket.connected);
+  });
   return (
     <div>
-      <Profile user={user} currentUser={currentUser} />
+      <Profile
+        socket={socket}
+        user={user}
+        currentUser={currentUser}
+        followers={followers}
+        followings={followings}
+      />
     </div>
   );
 };
@@ -19,6 +34,15 @@ export async function getServerSideProps(context: any) {
 
   const user = await axios.get(
     `${process.env.NEXT_PUBLIC_CLIENT_URL}users/${id.id}?populate[posts][populate][0]=files`,
+    {
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+    }
+  );
+
+  const follow = await axios.get(
+    `${process.env.NEXT_PUBLIC_CLIENT_URL}users/${id.id}?populate=followers&populate=followings`,
     {
       headers: {
         "Content-Type": "application/json; charset=utf-8",
@@ -40,6 +64,8 @@ export async function getServerSideProps(context: any) {
       id,
       user: user.data,
       currentUser: currentUser.data,
+      followers: follow.data.followers,
+      followings: follow.data.followings,
     },
   };
 }
