@@ -4,7 +4,6 @@ import Link from "next/link";
 const Postlist = ({ postList }: any) => {
   const [isPopup, setisPopup] = useState();
   console.log(postList);
-
   return (
     <div className="mt-10 grid grid-cols-3 gap-0 w-fit border-t-[1px] border-t-gray-400 py-5 ">
       {postList.map(({ img, index }: any) => (
