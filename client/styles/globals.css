@@ -44,3 +44,6 @@ body {
 .layout {
   grid-template-columns: minmax(14rem, 30%) 1fr;
 }
+.post {
+  grid-template-columns: 1fr minmax(20rem, 30%);
+}

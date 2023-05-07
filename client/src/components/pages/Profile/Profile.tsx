@@ -22,7 +22,7 @@ const Profile = () => {
     router.back();
   };
   return (
-    <div className="md:flex lg:grid layout">
+    <div className="md:flex lg:grid layout relative">
       <div className="hidden md:block">
         <Menudesktop />
         <Menutablet />
