@@ -17,6 +17,8 @@ const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
 
   const [isfollow, setIsFollow] = useState({
     status: false,
+    followers,
+    followings,
   });
 
   const router = useRouter();
@@ -28,6 +30,11 @@ const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
     let followData = {};
     if (isfollow.status === true) {
       //setisFollow
+      setIsFollow({
+        status: true,
+        followers: isfollow.followers - 1,
+        followings: isfollow.followings,
+      });
     } else {
       followData = {
         data: {
@@ -36,6 +43,11 @@ const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
         },
       };
       //setisFollow
+      setIsFollow({
+        status: true,
+        followers: isfollow.followers + 1,
+        followings: isfollow.followings,
+      });
       console.log(followData);
       await socket.emit("follow", followData);
     }
