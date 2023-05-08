@@ -101,6 +101,13 @@
       "relation": "oneToMany",
       "target": "api::follow.follow",
       "mappedBy": "user_following"
+    },
+    "avatar": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }

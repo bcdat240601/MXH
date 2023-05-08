@@ -19,7 +19,7 @@ export default {
     const io = require("socket.io")(strapi.server.httpServer, {
       cors: {
         origin: "http://localhost:3000",
-        methods: ["GET", "POST"],
+        methods: ["GET", "POST", "DELETE"],
 
         // credentials: true,
       },
@@ -47,7 +47,7 @@ export default {
         console.log("Done");
 
         socket.to("1").emit("get-follows", () => {
-          console.log("try to get comments");
+          console.log("try to get follow");
         });
       });
 

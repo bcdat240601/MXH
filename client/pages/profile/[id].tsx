@@ -42,7 +42,7 @@ export async function getServerSideProps(context: any) {
   );
 
   const follow = await axios.get(
-    `${process.env.NEXT_PUBLIC_CLIENT_URL}users/${id.id}?populate=followers&populate=followings`,
+    `${process.env.NEXT_PUBLIC_CLIENT_URL}users/${id.id}?populate[followers][populate][0]=user_following&populate[followings][populate][0]=user_follower`,
     {
       headers: {
         "Content-Type": "application/json; charset=utf-8",

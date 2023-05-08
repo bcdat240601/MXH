@@ -11,14 +11,24 @@ import Link from "next/link";
 import Menutablet from "../../Menutablet";
 import Menudesktop from "../../Menudesktop";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
-  console.log(followers.length, followings.length);
+  // console.log("follower", followers);
+  // console.log("followings", followings);
+  const [cookie] = useCookies(["user"]);
+
   const [isOwn, setisOwn] = useState(0);
 
+  const [followerState, setFollowerState] = useState(followers);
+
   const [isfollow, setIsFollow] = useState({
-    status: false,
-    followers,
-    followings,
+    status: followers.find((follower: any) => {
+      return follower.user_following.id === currentUser.id;
+    })
+      ? true
+      : false,
+    followers: followers.length,
+    followings: followings.length,
   });
 
   const router = useRouter();
@@ -26,30 +36,73 @@ const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
     router.back();
   };
 
-  const handleReact = async (idUser: any) => {
+  const handleFollow = async () => {
+    const token = cookie.user;
     let followData = {};
+
     if (isfollow.status === true) {
+      console.log(followerState);
+
+      const idfollow = followerState.find((follower: any) => {
+        if (follower.user_following.id === currentUser.id) {
+          return follower.id;
+        }
+      });
+      console.log(idfollow);
+      const deletefollow = await axios.delete(
+        `${process.env.NEXT_PUBLIC_CLIENT_URL}follows/${idfollow.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.replaceAll('"', "")}`,
+          },
+        }
+      );
       //setisFollow
       setIsFollow({
-        status: true,
+        status: false,
         followers: isfollow.followers - 1,
         followings: isfollow.followings,
       });
     } else {
       followData = {
         data: {
-          user_follower: idUser,
-          user_following: user.id,
+          user_follower: user.id,
+          user_following: currentUser.id,
         },
       };
-      //setisFollow
+
+      // await socket.emit("follow", followData);
+
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_CLIENT_URL}follows`,
+        followData,
+        {
+          headers: {
+            Authorization: `Bearer ${token.replaceAll('"', "")}`,
+            "Content-Type": "application/json; charset=utf-8",
+          },
+        }
+      );
+
+      const follower = await axios.get(
+        `${process.env.NEXT_PUBLIC_CLIENT_URL}users/${user.id}?populate[followers][populate][0]=user_following&populate[followings][populate][0]=user_follower`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.replaceAll('"', "")}`,
+            "Content-Type": "application/json; charset=utf-8",
+          },
+        }
+      );
+      console.log(follower.data.followers);
+
+      setFollowerState(follower.data.followers);
+
+      // setisFollow
       setIsFollow({
         status: true,
         followers: isfollow.followers + 1,
         followings: isfollow.followings,
       });
-      console.log(followData);
-      await socket.emit("follow", followData);
     }
   };
 
@@ -84,11 +137,11 @@ const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
             </div>
             <div className="flex items-center justify-around px-10 mt-5">
               <div className="flex flex-col items-center">
-                <p className="font-bold">{followings.length}</p>
+                <p className="font-bold">{isfollow.followings}</p>
                 <span className="text-gray-400">following</span>
               </div>
               <div className="flex flex-col items-center">
-                <p className="font-bold">{followers.length}</p>
+                <p className="font-bold">{isfollow.followers}</p>
                 <span className="text-gray-400">follower</span>
               </div>
               <div className="flex flex-col items-center">
@@ -111,9 +164,15 @@ const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
           ) : (
             <article>
               <div className="mt-5 flex items-center justify-center gap-x-2">
-                <button className="py-1 px-2 w-[192px] bg-thGreen text-white rounded-md font-medium cursor-pointer">
-                  follow
-                </button>
+                {isfollow.status ? (
+                  <button className="py-1 px-2 w-[192px] bg-thGreen text-white rounded-md font-medium cursor-pointer">
+                    unfollow
+                  </button>
+                ) : (
+                  <button className="py-1 px-2 w-[192px] bg-thGreen text-white rounded-md font-medium cursor-pointer">
+                    follow
+                  </button>
+                )}
                 <button className="bg-gray-300 h-[32px] px-2 rounded-md grid place-items-center">
                   <RiMessage2Fill size={20} />
                 </button>
@@ -144,11 +203,11 @@ const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
             </div>
             <div className="flex items-center gap-x-10 my-3">
               <div className="flex flex-col items-center">
-                <p className="font-bold">{followings.length}</p>
+                <p className="font-bold">{isfollow.followings}</p>
                 <span className="text-gray-400">following</span>
               </div>
               <div className="flex flex-col items-center">
-                <p className="font-bold">{followers.length}</p>
+                <p className="font-bold">{isfollow.followers}</p>
                 <span className="text-gray-400">follower</span>
               </div>
               <div className="flex flex-col items-center">
@@ -171,9 +230,21 @@ const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
             ) : (
               <article>
                 <div className="mt-5 flex items-center  gap-x-2">
-                  <button className="py-1 px-2 w-[192px] bg-thGreen text-white rounded-md font-medium cursor-pointer">
-                    follow
-                  </button>
+                  {isfollow.status ? (
+                    <button
+                      className="py-1 px-2 w-[192px] bg-thGreen text-white rounded-md font-medium cursor-pointer"
+                      onClick={handleFollow}
+                    >
+                      unfollow
+                    </button>
+                  ) : (
+                    <button
+                      className="py-1 px-2 w-[192px] bg-thGreen text-white rounded-md font-medium cursor-pointer"
+                      onClick={handleFollow}
+                    >
+                      follow
+                    </button>
+                  )}
                   <button className="bg-gray-300 h-[32px] px-2 rounded-md grid place-items-center">
                     <RiMessage2Fill size={20} />
                   </button>
