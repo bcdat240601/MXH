@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TiDelete, TiTimes } from "react-icons/ti";
-import Images from "../../assets/images";
 import axios from "axios";
+import Link from "next/link";
 
-const ListResults = ({ list, handle }: any) => {
+const ListResults = ({ list, handle, setRecent }: any) => {
   console.log(list);
   return (
     <>
@@ -23,22 +23,34 @@ const ListResults = ({ list, handle }: any) => {
             {!handle ? (
               <p>{item.username}</p>
             ) : (
-              <a
-                href={`/profile/${item.id}`}
-                onClick={() => handle(item)}
-                className="font-semibold text-thDark"
-              >
-                {item.username}
-              </a>
+              <Link href={`/profile/${item.id}`} legacyBehavior>
+                <a
+                  onClick={() => handle(item)}
+                  className="font-semibold text-thDark"
+                >
+                  {item.username}
+                </a>
+              </Link>
             )}
 
             <br />
             {item.fullname}
             {/* {state && <span className="text-thGray"> • {state}</span>} */}
           </p>
-          <div className="text-gray-400">
-            <TiTimes size={25} />
-          </div>
+          {setRecent && (
+            <div
+              onClick={() => {
+                const newArr = list.filter(
+                  (result: any) => item.id !== result.id
+                );
+                localStorage.setItem("search", JSON.stringify(newArr));
+                setRecent(newArr);
+              }}
+              className="text-gray-400 cursor-pointer"
+            >
+              <TiTimes size={25} />
+            </div>
+          )}
         </article>
       ))}
     </>
@@ -51,7 +63,7 @@ const Search = ({ css }: any) => {
     list: [],
     loading: false,
   });
-  const [recent, setRecent] = useState([]);
+  const [recent, setRecent] = useState<any[]>([]);
 
   useEffect(() => {
     // Perform localStorage action
@@ -81,10 +93,13 @@ const Search = ({ css }: any) => {
   }, [searchInput]);
 
   const handleClick = (recentData: any) => {
+    console.log(recentData);
     //already filter the duplicated
-    const newArr = recent.find((data: any) => data.id === recentData.id)
-      ? [...recent]
-      : [recentData, ...recent];
+    const newArr: any[] = [
+      recentData,
+      ...recent.filter((data: any) => data.id !== recentData.id),
+    ];
+    setRecent(newArr);
     localStorage.setItem("search", JSON.stringify(newArr));
     console.log("Test");
   };
@@ -103,12 +118,11 @@ const Search = ({ css }: any) => {
             value={searchInput}
             onChange={(e: any) => setSearchInput(e.target.value)}
           />
-          <div className="absolute right-7 flex justify-center items-center text-xs text-gray-500">
-            <TiDelete
-              className="cursor-pointer"
-              onClick={() => setSearchInput("")}
-              size={20}
-            />
+          <div
+            onClick={() => setSearchInput("")}
+            className="absolute right-7 flex justify-center items-center text-xs text-gray-500 cursor-pointer"
+          >
+            <TiDelete size={20} />
           </div>
         </div>
       </section>
@@ -117,10 +131,22 @@ const Search = ({ css }: any) => {
           <>
             <div className="flex justify-between items-center px-6 py-4">
               <h1 className="font-medium">Gần đây</h1>
-              <p className="text-thBlue font-medium">Xóa tất cả</p>
+              <p
+                onClick={() => {
+                  setRecent([]);
+                  localStorage.setItem("search", JSON.stringify([]));
+                }}
+                className="text-thBlue font-medium cursor-pointer"
+              >
+                Xóa tất cả
+              </p>
             </div>
             <div>
-              <ListResults list={recent} />
+              <ListResults
+                list={recent}
+                handle={handleClick}
+                setRecent={setRecent}
+              />
             </div>
           </>
         ) : (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 //lib
 import Image from "next/image";
 
@@ -6,13 +6,32 @@ import Image from "next/image";
 import Images from "@/src/assets/images";
 import axios from "axios";
 const Comment = ({
-  id,
+  id_comment,
   content,
   id_comment_response,
   username,
-  createdAt,
-  updatedAt,
+  id_post,
+  socket,
+  currentUser,
 }: any) => {
+  const [isReply, setReply] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    console.log(id_comment);
+    const comment = inputRef.current?.value || "";
+    const commentData = {
+      data: {
+        id_comment: Math.floor(Math.random() * 300000),
+        content: comment,
+        post: [id_post],
+        user_comment: [currentUser.id],
+        id_comment_response: id_comment,
+      },
+    };
+    await socket.emit("comment", commentData);
+    console.log("Check comment");
+  };
   return (
     <>
       <div
@@ -33,6 +52,20 @@ const Comment = ({
           <p className="font-medium float-left">{username}</p>
 
           <span className="ml-1 ">{content}</span>
+          <div className="block mt-1">
+            <button onClick={() => setReply(!isReply)}>Trả lời</button>
+            {isReply && (
+              <form onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  className="p-2"
+                  placeholder="Nhập câu trả lời"
+                  ref={inputRef}
+                />
+                <button>Gửi</button>
+              </form>
+            )}
+          </div>
         </div>
       </div>
     </>

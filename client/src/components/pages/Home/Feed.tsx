@@ -110,13 +110,11 @@ const Feed = ({
   });
 
   const handleSubmit = async (e: any) => {
-    const token = cookie.user;
-    console.log(id_post);
     e.preventDefault();
     const comment = inputRef.current?.value || "";
     const commentData = {
       data: {
-        id_comment: Math.floor(Math.random() * 12000),
+        id_comment: Math.floor(Math.random() * 300000),
         content: comment,
         post: [id_post],
         user_comment: [currentUser.id],
@@ -131,10 +129,6 @@ const Feed = ({
       ],
       totalComments: listComments.totalComments + 1,
     });
-    // socket.off("comment");
-
-    //lỗi sau này sẽ tìm cách sửa (nhưng mà chạy được)
-    // inputRef.current.value = "";
   };
 
   const handleSeeMore = async () => {
@@ -232,17 +226,26 @@ const Feed = ({
         }`}
       >
         <div>
-          {listComments.arrComments.map((comment: any) => (
-            <div key={comment.id}>
-              <Comment
-                username={
-                  comment.attributes.user_comment?.data?.attributes?.username
-                }
-                id={comment.id}
-                {...comment.attributes}
-              />
-            </div>
-          ))}
+          {listComments.arrComments
+            .sort(
+              (com: any) =>
+                com.attributes.id_comment === com.attributes.id_comment_response
+            )
+            .map((comment: any) => {
+              return (
+                <div key={comment.id}>
+                  <Comment
+                    username={
+                      comment.attributes.user_comment.data?.attributes?.username
+                    }
+                    id_post={id_post}
+                    currentUser={currentUser}
+                    socket={socket}
+                    {...comment.attributes}
+                  />
+                </div>
+              );
+            })}
           {listComments.arrComments.length > 10 && (
             <div className="px-4" onClick={handleSeeMore}>
               <button>Xem thêm</button>

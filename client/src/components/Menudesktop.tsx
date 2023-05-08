@@ -18,6 +18,7 @@ import Desktopitem from "./Desktopitem";
 import Desktopfeature from "./Desktopfeature";
 import Search from "./Feature/Search";
 import Post from "./Feature/Post";
+import Link from "next/link";
 const items = [
   { id: 2, icon: <AiOutlineSearch size={26} />, title: "Tìm Kiếm" },
   { id: 5, icon: <BiBell size={26} />, title: "Thông Báo", number: 1 },
@@ -114,16 +115,20 @@ const Menudesktop = ({ currentUser }: any) => {
       >
         <div className="flex flex-col pt-2 px-3 gap-y-9 ">
           <div className="mb-7 mt-5">
-            <img
-              src={Images.logo3.default.src}
-              alt=""
-              className={`w-44 ${css.sopacity} will-change-transform transition duration-500`}
-            />
-            <img
-              src={Images.logo2.default.src}
-              alt=""
-              className={`${css.nopacity} w-44  will-change-transform transition duration-500`}
-            />
+            <Link href="/home" legacyBehavior>
+              <a>
+                <img
+                  src={Images.logo3.default.src}
+                  alt=""
+                  className={`w-44 ${css.sopacity} will-change-transform transition duration-500`}
+                />
+                <img
+                  src={Images.logo2.default.src}
+                  alt=""
+                  className={`${css.nopacity} w-44  will-change-transform transition duration-500`}
+                />
+              </a>
+            </Link>
           </div>
           {items.map(({ id, icon, title }) => (
             <div key={id}>
