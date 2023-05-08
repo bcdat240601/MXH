@@ -125,7 +125,13 @@ const Feed = ({
     setListComments({
       arrComments: [
         ...listComments.arrComments,
-        { attributes: { ...commentData.data, username: currentUser.username } },
+
+        {
+          attributes: {
+            ...commentData.data,
+            username: currentUser.username,
+          },
+        },
       ],
       totalComments: listComments.totalComments + 1,
     });
@@ -227,10 +233,7 @@ const Feed = ({
       >
         <div>
           {listComments.arrComments
-            .sort(
-              (com: any) =>
-                com.attributes.id_comment === com.attributes.id_comment_response
-            )
+            .filter((comment: any) => !comment.attributes.id_comment_response)
             .map((comment: any) => {
               return (
                 <div key={comment.id}>
@@ -243,10 +246,33 @@ const Feed = ({
                     socket={socket}
                     {...comment.attributes}
                   />
+                  {listComments.arrComments
+                    .filter(
+                      (comment2: any) =>
+                        comment2.attributes.id_comment_response &&
+                        comment2.attributes.id_comment_response ===
+                          comment.attributes.id_comment
+                    )
+                    .map((comment: any) => (
+                      <>
+                        <Comment
+                          username={
+                            comment.attributes.user_comment.data?.attributes
+                              ?.username
+                          }
+                          id_post={id_post}
+                          currentUser={currentUser}
+                          socket={socket}
+                          {...comment.attributes}
+                        />
+                      </>
+                    ))}
                 </div>
               );
             })}
-          {listComments.arrComments.length > 10 && (
+          {listComments.arrComments.filter(
+            (comment: any) => !comment.attributes.id_comment_response
+          ).length > 10 && (
             <div className="px-4" onClick={handleSeeMore}>
               <button>Xem thêm</button>
             </div>

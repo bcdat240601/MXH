@@ -14,11 +14,12 @@ const Comment = ({
   socket,
   currentUser,
 }: any) => {
+  console.log(id_comment_response);
   const [isReply, setReply] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log(id_comment);
+
     const comment = inputRef.current?.value || "";
     const commentData = {
       data: {
