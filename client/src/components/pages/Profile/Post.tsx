@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import useSound from "use-sound";
 import Images from "../../../assets/images";
 import Link from "next/link";
 import Image from "next/image";
+import axios from "axios";
 import { AiFillHeart, AiOutlineHeart, AiOutlineComment } from "react-icons/ai";
 //swiper
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,39 +12,70 @@ import { Navigation, Pagination } from "swiper";
 import "swiper/swiper.min.css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-
-const Post = ({
-  currentUser,
-  comments,
-  postList,
-  likes,
-  socket,
-  id_post,
-  img,
-}: any) => {
-  const [like] = useSound("../assets/sounds/savingSound.mp3");
-  const [unlike] = useSound("../assets/sounds/unsavingSound.mp3");
-  const [comment, setComment] = useState<boolean>(false);
+import Comment from "../Home/Comment";
+import { useCookies } from "react-cookie";
+const Post = ({ currentUser, likes, socket, img, id_post }: any) => {
+  const data = likes?.data;
+  const foundItem = data && data.find((item: any) => item.id === id_post);
   const [isReact, setIsReact] = useState<any>({
     status:
-      likes &&
-      likes.data.find((like: any) => {
+      foundItem &&
+      foundItem?.attributes.beliked.data.find((like: any) => {
         return like.attributes.username === currentUser.username;
       })
         ? true
         : false,
     idPost: 0,
-    // arrLikes: [likes.data.map((like: any) => like.id)],
-    totalLikes: likes?.data.length,
+    arrLikes: [likes?.data.map((like: any) => like.id)],
+    totalLikes: 0,
   });
-  //   console.log(isReact.status);
   const [listComments, setListComments] = useState<any>({
-    arrComments: comments?.data,
-    totalComments: comments?.data.length,
+    arrComments: [],
+    totalComments: foundItem?.attributes.beliked.data.length,
   });
+  useEffect(() => {
+    setIsReact(({ prevState }: any) => ({
+      ...prevState,
+      status:
+        foundItem &&
+        foundItem?.attributes.beliked.data.find((like: any) => {
+          return like.attributes.username === currentUser.username;
+        })
+          ? true
+          : false,
+      totalLikes: foundItem?.attributes.beliked.data.length,
+    }));
+    async function fetchData() {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_CLIENT_URL}posts/${id_post}?populate[comments][populate][0]=user_comment`
+        );
+        console.log(response?.data.data.attributes.comments.data.length);
+        setListComments({
+          arrComments: response?.data.data.attributes.comments.data,
+          totalComments: response?.data.data.attributes.comments.data.length,
+        });
+      } catch (error) {
+        // Xử lý lỗi ở đây
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, [id_post]);
+
+  console.log(listComments.arrComments);
+
+  const [like] = useSound("../assets/sounds/savingSound.mp3");
+  const [unlike] = useSound("../assets/sounds/unsavingSound.mp3");
+  const [comment, setComment] = useState<boolean>(false);
+  const [cookie] = useCookies(["user"]);
+  const inputRef = useRef<HTMLInputElement>(null);
+  //   console.log(isReact.status);
   const handleReact = async (idPost: any) => {
     let likeData = {};
-    let newData = likes.data.map((like: any) => like.id);
+    let newData = foundItem?.attributes.beliked.data.map(
+      (like: any) => like.id
+    );
     if (isReact.status === true) {
       //   unlike();
       console.log(newData.filter((data: number) => data !== currentUser.id));
@@ -73,10 +105,30 @@ const Post = ({
     }
     await socket.emit("post", id_post, likeData);
   };
-  console.log(img && img[0].id);
-  const navigationPrevRef = useRef(null);
-  const navigationNextRef = useRef(null);
-
+  const handleSubmit = async (e: any) => {
+    const token = cookie.user;
+    console.log(inputRef.current?.value);
+    e.preventDefault();
+    const comment = inputRef.current?.value || "";
+    const commentData = {
+      data: {
+        id_comment: Math.floor(Math.random() * 12000),
+        content: comment,
+        post: [id_post],
+        user_comment: [currentUser.id],
+      },
+    };
+    await socket.emit("comment", commentData);
+    console.log(listComments.totalComments);
+    setListComments({
+      arrComments: [
+        ...listComments.arrComments,
+        { attributes: { ...commentData.data, username: currentUser.username } },
+      ],
+      totalComments: listComments.totalComments + 1,
+    });
+    if (inputRef.current) inputRef.current.value = "";
+  };
   return (
     <div className="absolute z-50 left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 h-[70%] ">
       <div className="relative  flex post w-full h-full rounded-md overflow-hidden">
@@ -90,7 +142,7 @@ const Post = ({
                 slidesPerView: 1,
               },
             }}
-            spaceBetween={5}
+            spaceBetween={1}
             navigation={true}
             pagination={{
               clickable: true,
@@ -125,7 +177,7 @@ const Post = ({
               <p className="font-medium text-sm">ChuongBoi</p>
             </div>
             <div className="comment-place mt-3 border-t-[1px]  flex-1 overflow-y-auto">
-              {!comments ? (
+              {listComments.arrComments.length === 0 ? (
                 <p
                   className="h-full grid place-items-center
                font-bold"
@@ -133,7 +185,22 @@ const Post = ({
                   No Comment yet
                 </p>
               ) : (
-                ""
+                listComments.arrComments.map((comment: any, index: number) => {
+                  console.log(
+                    comment.attributes.user_comment.data?.attributes.username
+                  );
+                  return (
+                    <div key={index}>
+                      <Comment
+                        content={comment.attributes.content}
+                        username={
+                          comment.attributes.user_comment.data?.attributes
+                            .username
+                        }
+                      />
+                    </div>
+                  );
+                })
               )}
             </div>
             <aside className="px-3 py-1 flex items-center gap-x-3">
@@ -163,11 +230,23 @@ const Post = ({
               </div>
             </aside>
             <div className="pt-2">
-              <input
-                type="text"
-                className="comment-form outline-none w-full"
-                placeholder="Enter your comment "
-              />
+              <form
+                onSubmit={(e) => handleSubmit(e)}
+                className="flex flex-row pr-4"
+              >
+                <input
+                  type="text"
+                  className="comment-form outline-none w-full text-sm"
+                  placeholder="Enter your comment "
+                  ref={inputRef}
+                />
+                <button
+                  className="text-thBlue text-sm cursor-pointer"
+                  type="submit"
+                >
+                  Send
+                </button>
+              </form>
             </div>
           </div>
         </div>

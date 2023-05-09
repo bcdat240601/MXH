@@ -12,7 +12,14 @@ import Menutablet from "../../Menutablet";
 import Menudesktop from "../../Menudesktop";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
+const Profile = ({
+  user,
+  currentUser,
+  followers,
+  followings,
+  socket,
+  likes,
+}: any) => {
   // console.log("follower", followers);
   // console.log("followings", followings);
   const [cookie] = useCookies(["user"]);
@@ -110,7 +117,7 @@ const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
     <div className="md:flex lg:grid layout relative">
       <div className="hidden md:block">
         <Menudesktop currentUser={currentUser} />
-        
+
         <Menutablet />
       </div>
       <main className="mbl-profile md:hidden w-full     ">
@@ -255,7 +262,12 @@ const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
           </article>
         </section>
         <section className=" mt-5">
-          <Postlist postList={user.posts} />
+          <Postlist
+            postList={user.posts}
+            likes={likes}
+            currentUser={currentUser}
+            socket={socket}
+          />
         </section>
       </main>
     </div>

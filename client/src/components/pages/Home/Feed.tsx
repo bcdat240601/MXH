@@ -25,6 +25,7 @@ const Feed = ({
   likes,
   socket,
 }: any) => {
+  console.log(likes);
   const [cookie] = useCookies(["user"]);
   const { username } = user_post?.data.attributes;
   const inputRef = useRef<HTMLInputElement>(null);

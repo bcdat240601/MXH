@@ -4,13 +4,19 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import io from "socket.io-client";
 
-const Index = ({ id, user, currentUser, followers, followings }: any) => {
+const Index = ({
+  id,
+  user,
+  currentUser,
+  followers,
+  followings,
+  likesData,
+}: any) => {
   const socket = io("http://127.0.0.1:1337", {
     transports: ["websocket"],
   });
   socket.on("connect", function () {
     console.log("Connected to WS server");
-
     console.log(socket.connected);
   });
   return (
@@ -21,6 +27,7 @@ const Index = ({ id, user, currentUser, followers, followings }: any) => {
         currentUser={currentUser}
         followers={followers}
         followings={followings}
+        likes={likesData}
       />
     </div>
   );
@@ -59,6 +66,15 @@ export async function getServerSideProps(context: any) {
       },
     }
   );
+  const listLike = await axios.get(
+    `${process.env.NEXT_PUBLIC_CLIENT_URL}posts?populate=beliked`,
+    {
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        Authorization: `Bearer ${token.user.replaceAll('"', "")}`,
+      },
+    }
+  );
   return {
     props: {
       id,
@@ -66,6 +82,7 @@ export async function getServerSideProps(context: any) {
       currentUser: currentUser.data,
       followers: follow.data.followers,
       followings: follow.data.followings,
+      likesData: listLike.data,
     },
   };
 }
