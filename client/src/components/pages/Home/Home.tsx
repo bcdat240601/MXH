@@ -20,7 +20,7 @@ const Home = ({ posts, images, user, socket, likes }: any) => {
           <Storyslide currentUser={user} />
           <section className="space-y-10">
             {posts.data.map((feed: any, index: number) => {
-              console.log(feed);
+              // console.log(feed.attributes.comments.data.slice(0, 10));
               return (
                 <div key={index} className="pt-3">
                   <Feed

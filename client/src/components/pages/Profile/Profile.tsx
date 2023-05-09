@@ -13,8 +13,7 @@ import Menudesktop from "../../Menudesktop";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
-  // console.log("follower", followers);
-  // console.log("followings", followings);
+  console.log(user.id === currentUser.id);
   const [cookie] = useCookies(["user"]);
 
   const [isOwn, setisOwn] = useState(0);
@@ -164,15 +163,12 @@ const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
           ) : (
             <article>
               <div className="mt-5 flex items-center justify-center gap-x-2">
-                {isfollow.status ? (
+                {currentUser.id !== user.id && (
                   <button className="py-1 px-2 w-[192px] bg-thGreen text-white rounded-md font-medium cursor-pointer">
-                    unfollow
-                  </button>
-                ) : (
-                  <button className="py-1 px-2 w-[192px] bg-thGreen text-white rounded-md font-medium cursor-pointer">
-                    follow
+                    {isfollow.status ? "Bỏ theo dõi" : "Theo dõi"}
                   </button>
                 )}
+
                 <button className="bg-gray-300 h-[32px] px-2 rounded-md grid place-items-center">
                   <RiMessage2Fill size={20} />
                 </button>
@@ -230,24 +226,20 @@ const Profile = ({ user, currentUser, followers, followings, socket }: any) => {
             ) : (
               <article>
                 <div className="mt-5 flex items-center  gap-x-2">
-                  {isfollow.status ? (
-                    <button
-                      className="py-1 px-2 w-[192px] bg-thGreen text-white rounded-md font-medium cursor-pointer"
-                      onClick={handleFollow}
-                    >
-                      unfollow
-                    </button>
-                  ) : (
-                    <button
-                      className="py-1 px-2 w-[192px] bg-thGreen text-white rounded-md font-medium cursor-pointer"
-                      onClick={handleFollow}
-                    >
-                      follow
-                    </button>
+                  {currentUser.id !== user.id && (
+                    <>
+                      <button
+                        className="py-1 px-2 w-[192px] bg-thGreen text-white rounded-md font-medium cursor-pointer"
+                        onClick={handleFollow}
+                      >
+                        {isfollow.status ? "Bỏ theo dõi" : "Theo dõi"}
+                      </button>
+
+                      <button className="bg-gray-300 h-[32px] px-2 rounded-md grid place-items-center">
+                        <RiMessage2Fill size={20} />
+                      </button>
+                    </>
                   )}
-                  <button className="bg-gray-300 h-[32px] px-2 rounded-md grid place-items-center">
-                    <RiMessage2Fill size={20} />
-                  </button>
                 </div>
               </article>
             )}

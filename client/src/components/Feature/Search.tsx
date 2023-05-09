@@ -7,52 +7,58 @@ const ListResults = ({ list, handle, setRecent }: any) => {
   console.log(list);
   return (
     <>
-      {list.map((item: any) => (
-        <article
-          key={item.id}
-          className="notif_follow flex items-center py-2 px-6"
-        >
-          <div className="rounded-full w-11 h-11 mr-3 cursor-pointer flex-shrink-0">
-            <img
-              src={item.img}
-              alt=""
-              className="rounded-full w-11 h-11 object-cover"
-            />
-          </div>
-          <p className="text-sm flex-grow text-thGray">
-            {!handle ? (
-              <p>{item.username}</p>
-            ) : (
-              <Link href={`/profile/${item.id}`} legacyBehavior>
-                <a
-                  onClick={() => handle(item)}
-                  className="font-semibold text-thDark"
-                >
-                  {item.username}
-                </a>
-              </Link>
-            )}
-
-            <br />
-            {item.fullname}
-            {/* {state && <span className="text-thGray"> • {state}</span>} */}
-          </p>
-          {setRecent && (
-            <div
-              onClick={() => {
-                const newArr = list.filter(
-                  (result: any) => item.id !== result.id
-                );
-                localStorage.setItem("search", JSON.stringify(newArr));
-                setRecent(newArr);
-              }}
-              className="text-gray-400 cursor-pointer"
-            >
-              <TiTimes size={25} />
+      {list.length > 0 ? (
+        list.map((item: any) => (
+          <article
+            key={item.id}
+            className="notif_follow flex items-center py-2 px-6"
+          >
+            <div className="rounded-full w-11 h-11 mr-3 cursor-pointer flex-shrink-0">
+              <img
+                src={item.img}
+                alt=""
+                className="rounded-full w-11 h-11 object-cover"
+              />
             </div>
-          )}
-        </article>
-      ))}
+            <p className="text-sm flex-grow text-thGray">
+              {!handle ? (
+                <p>{item.username}</p>
+              ) : (
+                <Link href={`/profile/${item.id}`} legacyBehavior>
+                  <a
+                    onClick={() => handle(item)}
+                    className="font-semibold text-thDark"
+                  >
+                    {item.username}
+                  </a>
+                </Link>
+              )}
+
+              <br />
+              {item.fullname}
+              {/* {state && <span className="text-thGray"> • {state}</span>} */}
+            </p>
+            {setRecent && (
+              <div
+                onClick={() => {
+                  const newArr = list.filter(
+                    (result: any) => item.id !== result.id
+                  );
+                  localStorage.setItem("search", JSON.stringify(newArr));
+                  setRecent(newArr);
+                }}
+                className="text-gray-400 cursor-pointer"
+              >
+                <TiTimes size={25} />
+              </div>
+            )}
+          </article>
+        ))
+      ) : (
+        <div className="h-full my-auto flex justify-center items-center">
+          Không có kết quả tìm kiếm
+        </div>
+      )}
     </>
   );
 };

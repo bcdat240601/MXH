@@ -40,14 +40,16 @@ const Feed = ({
       ? true
       : false,
     idPost: 0,
-    // arrLikes: [likes.data.map((like: any) => like.id)],
+
     totalLikes: likes.data.length,
   });
-  console.log(isReact.status);
+  console.log();
   const [listComments, setListComments] = useState<any>({
-    arrComments: comments.data,
+    arrComments:
+      comments.data.length > 10 ? comments.data.slice(0, 10) : comments.data,
     totalComments: comments.data.length,
   });
+  // console.log(comments.data.splice(0, 10).length);
   const [currentPage, setCurrentPage] = useState(1);
   const handleReact = async (idPost: any) => {
     let likeData = {};
@@ -95,7 +97,7 @@ const Feed = ({
     const token = cookie.user;
     console.log("socket run");
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?populate=user_comment&sort[0]=id%3Adesc`,
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?populate=user_comment`,
       {
         headers: {
           Authorization: `Bearer ${token.replaceAll('"', "")}`,
@@ -139,20 +141,29 @@ const Feed = ({
 
   const handleSeeMore = async () => {
     const token = cookie.user;
-    console.log("See more");
-    setCurrentPage((prevValue) => prevValue + 1);
+
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?populate=user_comment&sort[0]=id%3Adesc&pagination[page]=${currentPage}&pagination[pageSize]=10`,
+      `${
+        process.env.NEXT_PUBLIC_CLIENT_URL
+      }comments?populate=*&pagination[page]=${
+        currentPage + 1
+      }&pagination[pageSize]=10`,
       {
         headers: {
           Authorization: `Bearer ${token.replaceAll('"', "")}`,
         },
       }
     );
-    console.log(listComments.totalComments);
+    setCurrentPage((prevValue) => prevValue + 1);
+
+    const newArr = response.data.data.filter(
+      (res: any) => res.attributes.post.data.id === id_post
+    );
+    console.log(newArr.length);
+    console.log(listComments.arrComments.length);
     setListComments({
       totalComments: listComments.totalComments,
-      arrComments: [...listComments.arrComments, ...response.data.data],
+      arrComments: [...listComments.arrComments, ...newArr],
     });
   };
 
@@ -234,6 +245,7 @@ const Feed = ({
         <div>
           {listComments.arrComments
             .filter((comment: any) => !comment.attributes.id_comment_response)
+
             .map((comment: any) => {
               return (
                 <div key={comment.id}>
@@ -243,6 +255,8 @@ const Feed = ({
                     }
                     id_post={id_post}
                     currentUser={currentUser}
+                    setListComments={setListComments}
+                    listComments={listComments}
                     socket={socket}
                     {...comment.attributes}
                   />
@@ -270,13 +284,12 @@ const Feed = ({
                 </div>
               );
             })}
-          {listComments.arrComments.filter(
-            (comment: any) => !comment.attributes.id_comment_response
-          ).length > 10 && (
-            <div className="px-4" onClick={handleSeeMore}>
-              <button>Xem thêm</button>
-            </div>
-          )}
+          {listComments.arrComments.length >= 10 &&
+            listComments.arrComments.length < listComments.totalComments && (
+              <div className="px-4" onClick={handleSeeMore}>
+                <button>Xem thêm</button>
+              </div>
+            )}
 
           <form
             onSubmit={(e) => handleSubmit(e)}
