@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 //lib
 import Image from "next/image";
 
@@ -6,13 +6,49 @@ import Image from "next/image";
 import Images from "@/src/assets/images";
 import axios from "axios";
 const Comment = ({
-  id,
+  id_comment,
   content,
   id_comment_response,
   username,
-  createdAt,
-  updatedAt,
+  id_post,
+  socket,
+  currentUser,
+  setListComments,
+  listComments,
 }: any) => {
+  const [isReply, setReply] = useState(false);
+  // const inputRef = useRef<HTMLInputElement>(null);
+  const [input, setInput] = useState(`@${username} `);
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    // const comment = inputRef.current?.value || "";
+    const commentData = {
+      data: {
+        id_comment: Math.floor(Math.random() * 300000),
+        content: input,
+        post: [id_post],
+        user_comment: [currentUser.id],
+        id_comment_response: id_comment,
+      },
+    };
+    await socket.emit("comment", commentData);
+    setListComments({
+      arrComments: [
+        ...listComments.arrComments,
+
+        {
+          attributes: {
+            ...commentData.data,
+            username: currentUser.username,
+          },
+        },
+      ],
+      totalComments: listComments.totalComments + 1,
+    });
+    console.log("Check comment");
+    setInput("");
+  };
   return (
     <>
       <div
@@ -33,6 +69,23 @@ const Comment = ({
           <p className="font-medium float-left">{username}</p>
 
           <span className="ml-1 ">{content}</span>
+          {!id_comment_response && (
+            <div className="block mt-1">
+              <button onClick={() => setReply(!isReply)}>Trả lời</button>
+              {isReply && (
+                <form onSubmit={handleSubmit}>
+                  <input
+                    type="text"
+                    className="p-2"
+                    placeholder="Nhập câu trả lời"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                  />
+                  <button>Gửi</button>
+                </form>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>
