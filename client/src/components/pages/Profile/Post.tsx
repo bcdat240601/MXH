@@ -174,7 +174,7 @@ const Post = ({ currentUser, likes, socket, img, id_post }: any) => {
                 width={1000}
                 height={1000}
               />
-              <p className="font-medium text-sm">ChuongBoi</p>
+              <p className="font-medium text-sm">{currentUser?.username}</p>
             </div>
             <div className="comment-place mt-3 border-t-[1px]  flex-1 overflow-y-auto">
               {listComments.arrComments.length === 0 ? (
@@ -185,22 +185,50 @@ const Post = ({ currentUser, likes, socket, img, id_post }: any) => {
                   No Comment yet
                 </p>
               ) : (
-                listComments.arrComments.map((comment: any, index: number) => {
-                  console.log(
-                    comment.attributes.user_comment.data?.attributes.username
-                  );
-                  return (
-                    <div key={index}>
-                      <Comment
-                        content={comment.attributes.content}
-                        username={
-                          comment.attributes.user_comment.data?.attributes
-                            .username
-                        }
-                      />
-                    </div>
-                  );
-                })
+                listComments.arrComments
+                  .filter(
+                    (comment: any) => !comment.attributes.id_comment_response
+                  )
+
+                  .map((comment: any) => {
+                    return (
+                      <div key={comment.id}>
+                        <Comment
+                          username={
+                            comment.attributes.user_comment.data?.attributes
+                              ?.username
+                          }
+                          id_post={id_post}
+                          currentUser={currentUser}
+                          setListComments={setListComments}
+                          listComments={listComments}
+                          socket={socket}
+                          {...comment.attributes}
+                        />
+                        {listComments.arrComments
+                          .filter(
+                            (comment2: any) =>
+                              comment2.attributes.id_comment_response &&
+                              comment2.attributes.id_comment_response ===
+                                comment.attributes.id_comment
+                          )
+                          .map((comment: any) => (
+                            <>
+                              <Comment
+                                username={
+                                  comment.attributes.user_comment.data
+                                    ?.attributes?.username
+                                }
+                                id_post={id_post}
+                                currentUser={currentUser}
+                                socket={socket}
+                                {...comment.attributes}
+                              />
+                            </>
+                          ))}
+                      </div>
+                    );
+                  })
               )}
             </div>
             <aside className="px-3 py-1 flex items-center gap-x-3">

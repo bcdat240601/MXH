@@ -16,6 +16,12 @@ const Comment = ({
   setListComments,
   listComments,
 }: any) => {
+  const text = content;
+  const formattedText = text.replace(
+    /@([^\s]+)/g,
+    '<span class="text-thBlue">$&</span>'
+  );
+  console.log(typeof formattedText);
   const [isReply, setReply] = useState(false);
   // const inputRef = useRef<HTMLInputElement>(null);
   const [input, setInput] = useState(`@${username} `);
@@ -55,7 +61,7 @@ const Comment = ({
         className={`${
           !id_comment_response
             ? "comment text-[13px] md:text-sm flex px-3 gap-x-2 "
-            : "reply text-[13px] md:text-sm flex px-2 ml-6 my-3 gap-x-2 border-l-2"
+            : "reply text-[13px] md:text-sm flex px-2 ml-6 my-3 gap-x-2 border-l-2 border-pink-500"
         } py-1.5`}
       >
         <Image
@@ -68,20 +74,28 @@ const Comment = ({
         <div className="block">
           <p className="font-medium float-left">{username}</p>
 
-          <span className="ml-1 ">{content}</span>
+          <span
+            className="ml-1 "
+            dangerouslySetInnerHTML={{ __html: formattedText }}
+          ></span>
           {!id_comment_response && (
             <div className="block mt-1">
-              <button onClick={() => setReply(!isReply)}>Trả lời</button>
+              <button
+                onClick={() => setReply(!isReply)}
+                className="text-thBlue"
+              >
+                Trả lời
+              </button>
               {isReply && (
                 <form onSubmit={handleSubmit}>
                   <input
                     type="text"
-                    className="p-2"
+                    className="p-2 outline-none"
                     placeholder="Nhập câu trả lời"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                   />
-                  <button>Gửi</button>
+                  <button className="text-thBlue">Gửi</button>
                 </form>
               )}
             </div>
