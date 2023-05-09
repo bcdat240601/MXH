@@ -23,6 +23,7 @@ const Profile = ({ user, currentUser }: any) => {
     <div className="md:flex lg:grid layout relative">
       <div className="hidden md:block">
         <Menudesktop currentUser={currentUser} />
+        
         <Menutablet />
       </div>
       <main className="mbl-profile md:hidden w-full     ">
