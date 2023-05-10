@@ -300,7 +300,7 @@ const Feed = ({
                               ?.username
                           }
                           id_user_comment={
-                            comment.attributes.user_comment[0] ||
+                            comment.attributes.user_comment.data?.id ||
                             comment.attributes.user_comment[0]
                           }
                           id_post={id_post}
