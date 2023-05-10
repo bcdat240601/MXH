@@ -222,8 +222,8 @@ const Feed = ({
         </div>
       </aside>
       <aside>
-        <Image
-          src={`${process.env.NEXT_PUBLIC_HOSTNAME}${image.data[0].attributes.formats.thumbnail.url}`}
+        <img
+          src={`${process.env.NEXT_PUBLIC_HOSTNAME}${image.data[0].attributes.url}`}
           alt="posts"
           className="object-cover w-full h-[17.5rem] md:h-[36.5rem]"
           width={1000}

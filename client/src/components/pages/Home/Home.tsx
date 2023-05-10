@@ -9,7 +9,7 @@ import Leftbar from "./Leftbar";
 import Storyslide from "./Story/Storyslide";
 
 const Home = ({ posts, images, user, socket, likes, userList }: any) => {
-  console.log(posts);
+  console.log(images);
   return (
     <>
       <section className="flex h-screen">
@@ -20,6 +20,7 @@ const Home = ({ posts, images, user, socket, likes, userList }: any) => {
           {/* <Storyslide currentUser={user} /> */}
           <section className="space-y-10">
             {posts.data.map((feed: any, index: number) => {
+              console.log(feed);
               return (
                 <div key={index} className="pt-3">
                   <Feed
