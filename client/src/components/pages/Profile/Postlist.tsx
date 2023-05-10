@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Post from "./Post";
 import axios from "axios";
-const Postlist = ({ currentUser, postList, likes, socket }: any) => {
+const Postlist = ({ currentUser, postList, likes, socket, user }: any) => {
   //declare
   const [isPopup, setisPopup] = useState();
   const [isShow, setIsShow] = useState(false);
@@ -60,6 +60,7 @@ const Postlist = ({ currentUser, postList, likes, socket }: any) => {
           currentUser={currentUser}
           socket={socket}
           id_post={idPost}
+          user={user}
         />
       </div>
       <div

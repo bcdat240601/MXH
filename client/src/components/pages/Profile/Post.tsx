@@ -14,7 +14,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Comment from "../Home/Comment";
 import { useCookies } from "react-cookie";
-const Post = ({ currentUser, likes, socket, img, id_post }: any) => {
+const Post = ({ currentUser, likes, socket, img, id_post, user }: any) => {
   const data = likes?.data;
   const foundItem = data && data.find((item: any) => item.id === id_post);
   const [isReact, setIsReact] = useState<any>({
@@ -167,14 +167,14 @@ const Post = ({ currentUser, likes, socket, img, id_post }: any) => {
         <div className="info bg-white h-full w-[45%] flex-shrink-0">
           <div className="px-3 py-5 flex flex-col h-full">
             <div className="flex items-center gap-x-3">
-              <Image
-                src={Images.av4.default.src}
+              <img
+                src={`${process.env.NEXT_PUBLIC_HOSTNAME}${user?.avatar.url}`}
                 alt=""
                 className="w-8 h-8 rounded-full object-cover"
                 width={1000}
                 height={1000}
               />
-              <p className="font-medium text-sm">{currentUser?.username}</p>
+              <p className="font-medium text-sm">{user?.username}</p>
             </div>
             <div className="comment-place mt-3 border-t-[1px]  flex-1 overflow-y-auto">
               {listComments.arrComments.length === 0 ? (

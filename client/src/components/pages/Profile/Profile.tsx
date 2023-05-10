@@ -12,6 +12,7 @@ import Menutablet from "../../Menutablet";
 import Menudesktop from "../../Menudesktop";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import Updateprofile from "./Updateprofile";
 const Profile = ({
   user,
   currentUser,
@@ -20,17 +21,18 @@ const Profile = ({
   socket,
   likes,
 }: any) => {
-  // console.log("follower", followers);
-  // console.log("followings", followings);
   const [cookie] = useCookies(["user"]);
-
-  const [isOwn, setisOwn] = useState(0);
+  const [isEdit, setisEdit] = useState({
+    css: "opacity-0 invisible",
+    overlay: "opacity-0 invisible",
+  });
+  const [isOwn, setisOwn] = useState(currentUser.id);
 
   const [followerState, setFollowerState] = useState(followers);
 
   const [isfollow, setIsFollow] = useState({
     status: followers.find((follower: any) => {
-      return follower.user_following.id === currentUser.id;
+      return follower.user_following?.id === currentUser.id;
     })
       ? true
       : false,
@@ -112,7 +114,12 @@ const Profile = ({
       });
     }
   };
-
+  const handleEdit = () => {
+    if (isEdit.css === "opacity-0 invisible")
+      setisEdit({ css: "opacity-1 visible", overlay: "opacity-60 visible" });
+    else
+      setisEdit({ css: "opacity-0 invisible", overlay: "opacity-0 invisible" });
+  };
   return (
     <div className="md:flex lg:grid layout relative">
       <div className="hidden md:block">
@@ -134,7 +141,7 @@ const Profile = ({
           <article>
             <div className="px-2 py-2 mx-auto w-fit mt-14  border-ava rounded-full ">
               <img
-                src={Images.av2.default.src}
+                src={``}
                 alt=""
                 className="w-[100px] h-[100px] object-cover rounded-full "
               />
@@ -194,7 +201,7 @@ const Profile = ({
         <section className="flex items-center gap-x-10">
           <div className="px-0.5 py-0.5 mx-auto w-fit border-2 border-black rounded-full ">
             <img
-              src={Images.av2.default.src}
+              src={`${process.env.NEXT_PUBLIC_HOSTNAME}${user.avatar.url}`}
               alt=""
               className="w-[150px] h-[150px] object-cover rounded-full "
             />
@@ -221,10 +228,13 @@ const Profile = ({
               </div>
             </div>
             <span className="text-gray-400 mt-5">{user.username}</span>
-            {isOwn === 1 ? (
+            {currentUser.id === user.id ? (
               <article>
                 <div className="mt-5 flex items-center  gap-x-2">
-                  <button className="py-1 px-2 bg-thBlue text-white rounded-md font-medium cursor-pointer">
+                  <button
+                    className="py-1 px-2 bg-thBlue text-white rounded-md font-medium cursor-pointer"
+                    onClick={handleEdit}
+                  >
                     Chỉnh sửa trang cá nhân
                   </button>
                   <button className="text-gray-400 ">
@@ -260,6 +270,18 @@ const Profile = ({
             likes={likes}
             currentUser={currentUser}
             socket={socket}
+            user={user}
+          />
+        </section>
+        <section>
+          <div
+            className={`overlay ${isEdit.overlay} absolute z-10 bg-black w-screen h-screen top-0 left-0 opacity-80`}
+            onClick={handleEdit}
+          ></div>
+          <Updateprofile
+            currentUser={currentUser}
+            css={isEdit.css}
+            avatar={user.avatar.url}
           />
         </section>
       </main>

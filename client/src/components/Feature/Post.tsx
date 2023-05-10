@@ -51,7 +51,7 @@ const Post = ({ css, currentUser }: any) => {
         const newPost = {
           data: {
             caption: data.caption,
-            user_post: [3],
+            user_post: [currentUser.id],
             files: imageId,
           },
         };

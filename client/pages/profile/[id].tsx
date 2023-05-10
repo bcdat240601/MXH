@@ -19,6 +19,8 @@ const Index = ({
     console.log("Connected to WS server");
     console.log(socket.connected);
   });
+  console.log(user);
+  // console.log(currentUser.ava);
   return (
     <div>
       <Profile
@@ -40,7 +42,7 @@ export async function getServerSideProps(context: any) {
   const token = parseCookies(context.req);
 
   const user = await axios.get(
-    `${process.env.NEXT_PUBLIC_CLIENT_URL}users/${id.id}?populate[posts][populate][0]=files`,
+    `${process.env.NEXT_PUBLIC_CLIENT_URL}users/${id.id}?populate[posts][populate][0]=files&populate=avatar`,
     {
       headers: {
         "Content-Type": "application/json; charset=utf-8",
