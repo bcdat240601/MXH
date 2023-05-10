@@ -60,7 +60,7 @@ export async function getServerSideProps(context: any) {
   );
 
   const currentUser = await axios.get(
-    `${process.env.NEXT_PUBLIC_CLIENT_URL}users/me`,
+    `${process.env.NEXT_PUBLIC_CLIENT_URL}users/me?populate=avatar`,
     {
       headers: {
         "Content-Type": "application/json; charset=utf-8",

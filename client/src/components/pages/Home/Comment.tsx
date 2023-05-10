@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 //lib
 import Image from "next/image";
 
@@ -10,6 +10,7 @@ const Comment = ({
   content,
   id_comment_response,
   username,
+  id_user_comment,
   id_post,
   socket,
   currentUser,
@@ -21,14 +22,28 @@ const Comment = ({
     /@([^\s]+)/g,
     '<span class="text-thBlue">$&</span>'
   );
-  console.log(typeof formattedText);
+
   const [isReply, setReply] = useState(false);
-  // const inputRef = useRef<HTMLInputElement>(null);
   const [input, setInput] = useState(`@${username} `);
+  const [avatar, setAvatar] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchData = async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_CLIENT_URL}users/${id_user_comment}?populate=avatar`
+      );
+      console.log(response.data);
+      setAvatar(response.data.avatar?.url || "");
+    };
+    fetchData();
+    return () => {
+      controller.abort();
+    };
+  }, []);
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
-    // const comment = inputRef.current?.value || "";
     const commentData = {
       data: {
         id_comment: Math.floor(Math.random() * 300000),
@@ -64,8 +79,8 @@ const Comment = ({
             : "reply text-[13px] md:text-sm flex px-2 ml-6 my-3 gap-x-2 border-l-2 border-pink-500"
         } py-1.5`}
       >
-        <Image
-          src={Images.av1.default.src}
+        <img
+          src={`${process.env.NEXT_PUBLIC_HOSTNAME}${avatar}`}
           alt=""
           className="w-6 h-6 rounded-full object-cover"
           width={100}

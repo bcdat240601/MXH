@@ -8,8 +8,8 @@ import Feed from "./Feed";
 import Leftbar from "./Leftbar";
 import Storyslide from "./Story/Storyslide";
 
-const Home = ({ posts, images, user, socket, likes }: any) => {
-  console.log(images);
+const Home = ({ posts, images, user, socket, likes, userList }: any) => {
+  console.log(posts);
   return (
     <>
       <section className="flex h-screen">
@@ -17,14 +17,14 @@ const Home = ({ posts, images, user, socket, likes }: any) => {
         <Menudesktop currentUser={user} />
         <main className="flex-1 h-screen overflow-y-scroll md:pt-6 md:grid md:place-items-center gap-y-10">
           <Header />
-          <Storyslide currentUser={user} />
+          {/* <Storyslide currentUser={user} /> */}
           <section className="space-y-10">
             {posts.data.map((feed: any, index: number) => {
-              // console.log(feed.attributes.comments.data.slice(0, 10));
               return (
                 <div key={index} className="pt-3">
                   <Feed
                     currentUser={user}
+                    user_post_id={feed.attributes.user_post.data.id}
                     id_post={feed.id}
                     socket={socket}
                     comments={feed.attributes.comments.data}
@@ -41,7 +41,7 @@ const Home = ({ posts, images, user, socket, likes }: any) => {
           </section>
           <Menumbl />
         </main>
-        <Leftbar currentUser={user} />
+        <Leftbar userList={userList} currentUser={user} />
       </section>
     </>
   );

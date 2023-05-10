@@ -4,7 +4,7 @@ import { useState } from "react";
 import io from "socket.io-client";
 
 import { parseCookies } from "@/helpers";
-const Index = ({ postData, imgData, userData, likesData }: any) => {
+const Index = ({ postData, imgData, userData, likesData, userList }: any) => {
   const socket = io("http://127.0.0.1:1337", {
     transports: ["websocket"],
   });
@@ -22,6 +22,7 @@ const Index = ({ postData, imgData, userData, likesData }: any) => {
           images={imgData}
           user={userData}
           likes={likesData}
+          userList={userList}
         />
       </section>
     </>
@@ -31,6 +32,16 @@ export default Index;
 
 export async function getServerSideProps(ctx: any) {
   const token = parseCookies(ctx.req);
+
+  const userList = await axios.get(
+    `${process.env.NEXT_PUBLIC_CLIENT_URL}users?populate=avatar`,
+    {
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        Authorization: `Bearer ${token.user.replaceAll('"', "")}`,
+      },
+    }
+  );
 
   const posts = await axios.get(
     `${process.env.NEXT_PUBLIC_CLIENT_URL}posts?populate[comments][populate][0]=user_comment&populate=user_post`,
@@ -63,7 +74,7 @@ export async function getServerSideProps(ctx: any) {
   );
 
   const user = await axios.get(
-    `${process.env.NEXT_PUBLIC_CLIENT_URL}users/me`,
+    `${process.env.NEXT_PUBLIC_CLIENT_URL}users/me?populate=avatar`,
     {
       headers: {
         "Content-Type": "application/json; charset=utf-8",
@@ -71,6 +82,7 @@ export async function getServerSideProps(ctx: any) {
       },
     }
   );
+  console.log(user.data);
 
   return {
     props: {
@@ -78,6 +90,7 @@ export async function getServerSideProps(ctx: any) {
       imgData: images.data,
       userData: user.data,
       likesData: listLike.data,
+      userList: userList.data,
     },
   };
 }

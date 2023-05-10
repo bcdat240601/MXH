@@ -24,23 +24,17 @@ const items = [
   { id: 5, icon: <BiBell size={26} />, title: "Thông Báo", number: 1 },
 ];
 const Menudesktop = ({ currentUser }: any) => {
+  console.log(currentUser);
   const [isMenu, setisMenu] = useState(false);
   const [checkInout, setcheckInout] = useState(true);
   const [mode, setmode] = useState(0);
   const items2 = [
-    // { id: 1, icon: <AiTwotoneHome size={26} />, title: "Trang Chủ" },
     {
       id: 3,
       iconActive: <BsFillPlusSquareFill size={24} />,
       icon: <BsPlusSquare size={24} />,
       title: "Tạo",
     },
-    // {
-    //   id: 4,
-    //   iconActive: <RiMessengerFill size={26} />,
-    //   icon: <RiMessengerLine size={26} />,
-    //   title: "Tin Nhắn",
-    // },
   ];
   const [css, setcss] = useState({
     w: "w-[15.25rem]",
@@ -158,7 +152,7 @@ const Menudesktop = ({ currentUser }: any) => {
           ))}
           <div className="px-2 flex items-center gap-x-4 text-base">
             <img
-              src={Images.av2.default.src}
+              src={`${process.env.NEXT_PUBLIC_HOSTNAME}${currentUser.avatar?.url}`}
               alt=""
               className="w-7 h-7 rounded-full object-cover"
             />

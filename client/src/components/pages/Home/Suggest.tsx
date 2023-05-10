@@ -1,20 +1,23 @@
 import React from "react";
 import Images from "../../../assets/images";
-const Suggest = () => {
+const Suggest = ({ username, fullname, avatar, id }: any) => {
+  console.log(avatar);
   return (
     <div className="flex items-center justify-between py-2">
       <div className="flex gap-x-3 items-center">
         <img
-          src={Images.av3.default.src}
+          src={`${process.env.NEXT_PUBLIC_HOSTNAME}${avatar?.url}`}
           alt=""
           className="w-8 h-8 rounded-full object-cover"
         />
         <div className="text-[13px] md:text-sm">
-          <p className="font-bold">.CloneSki</p>
-          <span className="text-thGray">Bill CloneSk</span>
+          <a href={`/profile/${id}`} className="font-bold">
+            {username}
+          </a>
+          <br />
+          <span className="text-thGray">{fullname}</span>
         </div>
       </div>
-      <p className="font-semibold text-thBlue text-xs">Theo dõi</p>
     </div>
   );
 };

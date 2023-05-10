@@ -4,7 +4,6 @@ import axios from "axios";
 import Link from "next/link";
 
 const ListResults = ({ list, handle, setRecent }: any) => {
-  console.log(list);
   return (
     <>
       {list.length > 0 ? (
@@ -15,7 +14,7 @@ const ListResults = ({ list, handle, setRecent }: any) => {
           >
             <div className="rounded-full w-11 h-11 mr-3 cursor-pointer flex-shrink-0">
               <img
-                src={item.img}
+                src={`${process.env.NEXT_PUBLIC_HOSTNAME}${item?.avatar?.url}`}
                 alt=""
                 className="rounded-full w-11 h-11 object-cover"
               />
@@ -82,12 +81,12 @@ const Search = ({ css }: any) => {
     const fetchData = async () => {
       if (searchInput !== "") {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_CLIENT_URL}users?filters[username][$contains]=${searchInput}`,
+          `${process.env.NEXT_PUBLIC_CLIENT_URL}users?filters[username][$contains]=${searchInput}&populate=avatar`,
           {
             signal: controller.signal,
           }
         );
-        console.log(response.data);
+
         setResult({ loading: true, list: response.data });
       } else {
         setResult({ ...result, list: [] });

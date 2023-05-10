@@ -6,7 +6,7 @@ import Images from "../../../assets/images";
 import Suggest from "./Suggest";
 import Image from "next/image";
 import { useCookies } from "react-cookie";
-const Leftbar = ({ currentUser }: any) => {
+const Leftbar = ({ currentUser, userList }: any) => {
   const router = useRouter();
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   return (
@@ -14,7 +14,7 @@ const Leftbar = ({ currentUser }: any) => {
       <div className="flex items-center justify-between">
         <div className="flex gap-x-3 items-center">
           <Image
-            src={Images.av2.default.src}
+            src={`${process.env.NEXT_PUBLIC_HOSTNAME}${currentUser.avatar.url}`}
             alt=""
             className="w-14 h-14 rounded-full object-cover"
             width={100}
@@ -41,10 +41,16 @@ const Leftbar = ({ currentUser }: any) => {
           <p className="text-xs font-semibold">Xem Tất Cả</p>
         </div>
         <div>
-          <Suggest />
-          <Suggest />
-          <Suggest />
-          <Suggest />
+          {userList
+            .filter((user: any) => user.id !== currentUser.id)
+            .map((user: any, index: number) => {
+              console.log(user.avatar);
+              return (
+                <div key={index}>
+                  <Suggest {...user} avatar={user?.avatar} />
+                </div>
+              );
+            })}
         </div>
         <div className="text-gray-400 text-sm mt-12">
           <span>

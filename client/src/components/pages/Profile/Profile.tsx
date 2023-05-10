@@ -21,6 +21,7 @@ const Profile = ({
   socket,
   likes,
 }: any) => {
+  console.log(currentUser);
   const [cookie] = useCookies(["user"]);
   const [isEdit, setisEdit] = useState({
     css: "opacity-0 invisible",
@@ -201,7 +202,7 @@ const Profile = ({
         <section className="flex items-center gap-x-10">
           <div className="px-0.5 py-0.5 mx-auto w-fit border-2 border-black rounded-full ">
             <img
-              src={`${process.env.NEXT_PUBLIC_HOSTNAME}${user.avatar.url}`}
+              src={`${process.env.NEXT_PUBLIC_HOSTNAME}${user.avatar?.url}`}
               alt=""
               className="w-[150px] h-[150px] object-cover rounded-full "
             />
@@ -281,7 +282,7 @@ const Profile = ({
           <Updateprofile
             currentUser={currentUser}
             css={isEdit.css}
-            avatar={user.avatar.url}
+            avatar={user.avatar?.url}
           />
         </section>
       </main>

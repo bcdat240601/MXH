@@ -168,7 +168,7 @@ const Post = ({ currentUser, likes, socket, img, id_post, user }: any) => {
           <div className="px-3 py-5 flex flex-col h-full">
             <div className="flex items-center gap-x-3">
               <img
-                src={`${process.env.NEXT_PUBLIC_HOSTNAME}${user?.avatar.url}`}
+                src={`${process.env.NEXT_PUBLIC_HOSTNAME}${user?.avatar?.url}`}
                 alt=""
                 className="w-8 h-8 rounded-full object-cover"
                 width={1000}
@@ -202,6 +202,10 @@ const Post = ({ currentUser, likes, socket, img, id_post, user }: any) => {
                           currentUser={currentUser}
                           setListComments={setListComments}
                           listComments={listComments}
+                          id_user_comment={
+                            comment.attributes.user_comment.data?.id ||
+                            comment.attributes.user_comment[0]
+                          }
                           socket={socket}
                           {...comment.attributes}
                         />
@@ -218,6 +222,10 @@ const Post = ({ currentUser, likes, socket, img, id_post, user }: any) => {
                                 username={
                                   comment.attributes.user_comment.data
                                     ?.attributes?.username
+                                }
+                                id_user_comment={
+                                  comment.attributes.user_comment.data?.id ||
+                                  comment.attributes.user_comment[0]
                                 }
                                 id_post={id_post}
                                 currentUser={currentUser}

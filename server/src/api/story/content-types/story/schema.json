@@ -23,11 +23,11 @@
         "audios"
       ]
     },
-    "watcheduser": {
+    "user_create": {
       "type": "relation",
-      "relation": "manyToMany",
+      "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "userwatching"
+      "inversedBy": "stories"
     }
   }
 }

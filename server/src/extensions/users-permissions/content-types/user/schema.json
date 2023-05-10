@@ -90,12 +90,6 @@
       "target": "api::post.post",
       "mappedBy": "beliked"
     },
-    "userwatching": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::story.story",
-      "mappedBy": "watcheduser"
-    },
     "followings": {
       "type": "relation",
       "relation": "oneToMany",
@@ -108,6 +102,12 @@
       ],
       "type": "media",
       "multiple": false
+    },
+    "stories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::story.story",
+      "mappedBy": "user_create"
     }
   }
 }

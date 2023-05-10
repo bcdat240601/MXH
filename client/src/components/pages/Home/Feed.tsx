@@ -24,11 +24,13 @@ const Feed = ({
   image,
   likes,
   socket,
+  user_post_id,
 }: any) => {
-  console.log(likes);
+  console.log(user_post_id);
   const [cookie] = useCookies(["user"]);
   const { username } = user_post?.data.attributes;
   const inputRef = useRef<HTMLInputElement>(null);
+
   //declare
   const [like] = useSound("./assets/sounds/savingSound.mp3");
   const [unlike] = useSound("./assets/sounds/unsavingSound.mp3");
@@ -50,8 +52,26 @@ const Feed = ({
       comments.data.length > 10 ? comments.data.slice(0, 10) : comments.data,
     totalComments: comments.data.length,
   });
+  const [avatar, setAvatar] = useState("");
+
   // console.log(comments.data.splice(0, 10).length);
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchData = async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_CLIENT_URL}users/${user_post_id}?populate=avatar`
+      );
+      console.log(response.data);
+      setAvatar(response.data.avatar?.url || "");
+    };
+    fetchData();
+    return () => {
+      controller.abort();
+    };
+  }, [user_post_id]);
+
   const handleReact = async (idPost: any) => {
     let likeData = {};
     let newData = likes.data.map((like: any) => like.id);
@@ -183,7 +203,7 @@ const Feed = ({
       <aside className="flex justify-between items-center px-4 py-4">
         <div className="flex gap-x-3 items-center">
           <Image
-            src={Images.av4.default.src}
+            src={`${process.env.NEXT_PUBLIC_HOSTNAME}${avatar}`}
             alt=""
             className="w-10 h-10 rounded-full object-cover"
             width={1000}
@@ -259,6 +279,10 @@ const Feed = ({
                     setListComments={setListComments}
                     listComments={listComments}
                     socket={socket}
+                    id_user_comment={
+                      comment.attributes.user_comment.data?.id ||
+                      comment.attributes.user_comment[0]
+                    }
                     {...comment.attributes}
                   />
                   {listComments.arrComments
@@ -274,6 +298,10 @@ const Feed = ({
                           username={
                             comment.attributes.user_comment.data?.attributes
                               ?.username
+                          }
+                          id_user_comment={
+                            comment.attributes.user_comment[0] ||
+                            comment.attributes.user_comment[0]
                           }
                           id_post={id_post}
                           currentUser={currentUser}
