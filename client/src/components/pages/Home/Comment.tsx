@@ -40,7 +40,7 @@ const Comment = ({
     return () => {
       controller.abort();
     };
-  }, []);
+  }, [id_user_comment]);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
