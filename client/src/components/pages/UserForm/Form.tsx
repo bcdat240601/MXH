@@ -48,25 +48,31 @@ const Form = () => {
   //onSubmit function
   const onSubmit: SubmitHandler<any> = async (data: FormData) => {
     setLoading(true);
-    await sleep(1000);
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_CLIENT_URL}auth/local`,
-      {
-        identifier: data.email,
-        password: data.password,
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_CLIENT_URL}auth/local`,
+        {
+          identifier: data.email,
+          password: data.password,
+        }
+      );
+      if (response.data.error) {
+        alert("Đăng nhập thất bại");
+      } else {
+        setCookie("user", JSON.stringify(response.data.jwt), {
+          path: "/",
+          maxAge: 3600 * 24, // Expires after 1hr
+          sameSite: true,
+        });
+        window.location.replace("/home");
+        alert("Đăng nhập thành công");
       }
-    );
-    if (response.data.error) {
-      alert("Wrong account");
-    } else {
-      setCookie("user", JSON.stringify(response.data.jwt), {
-        path: "/",
-        maxAge: 3600 * 24, // Expires after 1hr
-        sameSite: true,
-      });
-      window.location.replace("/home");
+      setLoading(false);
+    } catch {
+      alert("Đăng nhập thất bại hãy kiểm tra thông tin người dùng ");
+      setLoading(false);
     }
-    setLoading(false);
   };
   return (
     <>

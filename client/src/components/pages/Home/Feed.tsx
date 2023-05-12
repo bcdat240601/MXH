@@ -331,7 +331,7 @@ const Feed = ({
               ref={inputRef}
             />
             <button className="text-thBlue" type="submit">
-              Send
+              Gửi
             </button>
           </form>
         </div>

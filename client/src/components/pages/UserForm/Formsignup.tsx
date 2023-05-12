@@ -68,13 +68,13 @@ const Formsignup = () => {
       );
       if (response.data.error) {
         console.log(response.data.error);
-        alert("Wrong ");
+        alert("Đăng kí thất bại");
       } else {
-        alert("success");
+        alert("Đăng kí thành công");
         window.location.href = "/";
       }
     } catch (error) {
-      seterr("email has already taken");
+      seterr("Email này đã có người sử dụng");
     }
 
     setLoading(false);
@@ -110,7 +110,7 @@ const Formsignup = () => {
             defaultValue=""
             {...register("email", { required: "This is required" })}
             className=" py-3 pl-3 pr-4 w-[17rem] border-[1px] rounded-lg text-xs"
-            placeholder="Enter your email"
+            placeholder="Enter Email"
           />
           {errors.email && (
             <small className="text-red-600 w-[17rem] py-1">
@@ -122,11 +122,12 @@ const Formsignup = () => {
           <input
             type="password"
             className=" py-3 pl-3 pr-4 w-[17rem] border-[1px] rounded-lg text-xs"
-            placeholder="Enter your password"
+            placeholder="Enter Password"
             {...register("password", {
               required: "This is required",
             })}
           />
+
           {errors.password && (
             <small className="text-red-600 w-[17rem] py-1">
               *{errors.password.message?.toString()}
@@ -146,15 +147,6 @@ const Formsignup = () => {
             </small>
           )}
         </div>
-        {/* <div className="flex flex-col hidden">
-          <input
-            type="text"
-            defaultValue="1"
-            {...register("role")}
-            className=" py-3 pl-3 pr-4 w-[17rem] border-[1px] rounded-lg text-xs"
-            readOnly
-          />
-        </div> */}
 
         <div className="flex justify-start items-center gap-x-2 text-xs w-full">
           <input

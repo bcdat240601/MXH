@@ -102,7 +102,9 @@ const Post = ({ css, currentUser }: any) => {
         <div>
           <div className="flex gap-x-3 items-center mb-3">
             <img
-              src={Images.av2.default.src}
+              src={`${process.env.NEXT_PUBLIC_HOSTNAME}${
+                currentUser?.avatar?.url || "/"
+              }`}
               alt=""
               className="w-8 h-8 rounded-full object-cover"
             />

@@ -14,14 +14,19 @@ const Leftbar = ({ currentUser, userList }: any) => {
       <div className="flex items-center justify-between">
         <div className="flex gap-x-3 items-center">
           <Image
-            src={`${process.env.NEXT_PUBLIC_HOSTNAME}${currentUser.avatar.url}`}
+            src={`${process.env.NEXT_PUBLIC_HOSTNAME}${
+              currentUser.avatar?.url || "/"
+            }`}
             alt=""
             className="w-14 h-14 rounded-full object-cover"
             width={100}
             height={100}
           />
           <div className="text-[13px] md:text-sm">
-            <p className="font-bold">{currentUser.username}</p>
+            <a href={`/profile/${currentUser.id}`} className="font-bold">
+              {currentUser.username}
+            </a>
+            <br />
             <span className="text-thGray">{currentUser.fullname}</span>
           </div>
         </div>
