@@ -96,7 +96,7 @@ const Updateprofile = ({ currentUser, css, avatar }: any) => {
               user
             )
             .then((response) => {
-              alert("success");
+              alert("Cập nhật thành công");
               router.reload();
             })
             .catch((error) => {

@@ -58,7 +58,7 @@ const Post = ({ css, currentUser }: any) => {
         axios
           .post("http://localhost:1337/api/posts", newPost)
           .then((response) => {
-            alert("success");
+            alert("Đăng bài thành công");
             console.log(response.data);
           })
           .catch((error) => {
