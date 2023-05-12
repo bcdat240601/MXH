@@ -35,13 +35,13 @@ const Postlist = ({ currentUser, postList, likes, socket, user }: any) => {
         postList.map((post: any, index: number) => {
           return (
             <div key={index}>
-              <Link href={{ pathname: "/user-post/[id]", query: { id: 1 } }}>
+              <div>
                 <img
                   src={`${process.env.NEXT_PUBLIC_HOSTNAME}${post.files[0].url}`}
                   alt=""
                   className="w-[130px] h-[130px] md:w-[14.584rem]  md:h-[14.584rem] object-cover block md:hidden lg:hidden"
                 />
-              </Link>
+              </div>
               <div onClick={() => handlePost(post.id)}>
                 <img
                   src={`${process.env.NEXT_PUBLIC_HOSTNAME}${post.files[0].url}`}

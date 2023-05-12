@@ -10,7 +10,7 @@ const Menumbl = () => {
         <AiOutlineHome size={25} />
         <AiOutlineSearch size={25} />
         <BsFillPlusSquareFill size={24} />
-        <RiMessengerLine size={25} />
+        {/* <RiMessengerLine size={25} /> */}
         <img
           src={Images.av2.default.src}
           alt=""
