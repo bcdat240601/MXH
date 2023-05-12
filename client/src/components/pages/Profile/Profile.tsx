@@ -142,7 +142,7 @@ const Profile = ({
           <article>
             <div className="px-2 py-2 mx-auto w-fit mt-14  border-ava rounded-full ">
               <img
-                src={``}
+                src={`${process.env.NEXT_PUBLIC_HOSTNAME}${user.avatar?.url}`}
                 alt=""
                 className="w-[100px] h-[100px] object-cover rounded-full "
               />
@@ -166,7 +166,7 @@ const Profile = ({
               </div>
             </div>
           </article>
-          {isOwn === 1 ? (
+          {currentUser.id === user.id ? (
             <article>
               <div className="mt-5 flex items-center justify-center gap-x-2">
                 <button className="py-1 px-2 bg-thBlue text-white rounded-md font-medium cursor-pointer">
@@ -181,9 +181,14 @@ const Profile = ({
             <article>
               <div className="mt-5 flex items-center justify-center gap-x-2">
                 {currentUser.id !== user.id && (
-                  <button className="py-1 px-2 w-[192px] bg-thGreen text-white rounded-md font-medium cursor-pointer">
-                    {isfollow.status ? "Bỏ theo dõi" : "Theo dõi"}
-                  </button>
+                  <>
+                    <button
+                      className="py-1 px-2 w-[192px] bg-thGreen text-white rounded-md font-medium cursor-pointer"
+                      onClick={handleFollow}
+                    >
+                      {isfollow.status ? "Bỏ theo dõi" : "Theo dõi"}
+                    </button>
+                  </>
                 )}
 
                 <button className="bg-gray-300 h-[32px] px-2 rounded-md grid place-items-center">
@@ -194,7 +199,13 @@ const Profile = ({
           )}
         </section>
         <section>
-          <Postlist postList={user.post} />
+          <Postlist
+            postList={user.posts}
+            likes={likes}
+            currentUser={currentUser}
+            socket={socket}
+            user={user}
+          />
         </section>
         <Menumbl />
       </main>

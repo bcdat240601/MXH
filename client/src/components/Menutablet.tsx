@@ -103,10 +103,10 @@ const Menutablet = () => {
                 <BsPlusSquare size={26} />
               )}
             </div>
-            <div className="relative">
+            {/* <div className="relative">
               <div className="w-3 h-3 bg-thRed rounded-full absolute top-0 right-0"></div>
               <RiMessengerLine size={27} />
-            </div>
+            </div> */}
             <div
               className="relative"
               onClick={() => {

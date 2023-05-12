@@ -13,6 +13,13 @@ import Image from "next/image";
 import Comment from "./Comment";
 import Images from "../../../assets/images";
 
+//swiper
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper";
+//import swiper css
+import "swiper/swiper.min.css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 const Feed = ({
   caption,
   createdAt,
@@ -222,13 +229,36 @@ const Feed = ({
         </div>
       </aside>
       <aside>
-        <img
-          src={`${process.env.NEXT_PUBLIC_HOSTNAME}${image.data[0].attributes.url}`}
-          alt="posts"
-          className="object-cover w-full h-[17.5rem] md:h-[36.5rem]"
-          width={1000}
-          height={1000}
-        />
+        <Swiper
+          className="mySwiper"
+          modules={[Pagination, Navigation]}
+          breakpoints={{
+            768: {
+              // width: 768,
+              slidesPerView: 1,
+            },
+          }}
+          spaceBetween={1}
+          navigation={true}
+          pagination={{
+            clickable: true,
+            enabled: false,
+            dynamicBullets: true,
+          }}
+        >
+          {image &&
+            image.data.map((img: any, index: number) => (
+              <SwiperSlide key={index}>
+                <img
+                  src={`${process.env.NEXT_PUBLIC_HOSTNAME}${img.attributes.url}`}
+                  alt="posts"
+                  className="object-cover min-w-[560px] w-full h-[17.5rem] md:h-[36.5rem]"
+                  width={1000}
+                  height={1000}
+                />
+              </SwiperSlide>
+            ))}
+        </Swiper>
         <p className="text-[13px] text-thGray font-light px-3 py-3 md:text-sm">
           <span className="font-bold mr-1">{username}</span>
           {caption}
