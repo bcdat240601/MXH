@@ -151,11 +151,21 @@ const Menudesktop = ({ currentUser }: any) => {
             </div>
           ))}
           <div className="px-2 flex items-center gap-x-4 text-base">
-            <img
-              src={`${process.env.NEXT_PUBLIC_HOSTNAME}${currentUser.avatar?.url}`}
-              alt=""
-              className="w-7 h-7 rounded-full object-cover"
-            />
+            {currentUser.avatar?.url ? (
+              <img
+                src={`${process.env.NEXT_PUBLIC_HOSTNAME}${currentUser.avatar?.url}`}
+                alt=""
+                className="w-7 h-7 rounded-full object-cover"
+                width={100}
+                height={100}
+              />
+            ) : (
+              <img
+                src={Images.default.default.src}
+                alt=""
+                className="w-7 h-7 rounded-full object-cover"
+              />
+            )}
             {checkInout && (
               <a href={`/profile/${currentUser && currentUser?.id}`}>
                 Trang Cá Nhân

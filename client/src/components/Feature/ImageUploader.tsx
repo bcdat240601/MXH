@@ -7,9 +7,10 @@ const { Dragger } = Upload;
 interface ImageUploaderProps {
   uploadProps: UploadProps;
 }
+const allowed = ["image/jpeg", "image/png", "image/gif"];
 const ImageUploader: React.FC<ImageUploaderProps> = ({ uploadProps }) => {
   return (
-    <Dragger {...uploadProps}>
+    <Dragger accept={allowed.join(",")} {...uploadProps}>
       <p className="ant-upload-drag-icon">
         <InboxOutlined />
       </p>

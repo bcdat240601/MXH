@@ -17,7 +17,8 @@ import Images from "../assets/images";
 import Post from "./Feature/Post";
 import Notification from "./Feature/Notification";
 import Search from "./Feature/Search";
-const Menutablet = () => {
+const Menutablet = ({ currentUser }: any) => {
+  console.log(currentUser);
   const [isMenu, setisMenu] = useState(false);
   const [checkInout, setcheckInout] = useState(true);
   const [css, setcss] = useState({
@@ -74,11 +75,23 @@ const Menutablet = () => {
         <div className="h-screen w-18 bg-thWhite border-r-[1px] flex flex-col justify-between ">
           <div className="flex flex-col items-center pt-2 px-3 gap-y-9 ">
             <div className="mb-7 mt-5">
-              <img
-                src={Images.logo2.default.src}
-                alt=""
-                className="w-10 h-10 object-cover"
-              />
+              <a href={`/profile/${currentUser && currentUser?.id}`}>
+                {currentUser?.avatar?.url ? (
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_HOSTNAME}${currentUser.avatar?.url}`}
+                    alt=""
+                    className="w-10 h-10 rounded-full object-cover"
+                    width={100}
+                    height={100}
+                  />
+                ) : (
+                  <img
+                    src={Images.default.default.src}
+                    alt=""
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                )}
+              </a>
             </div>
             <div>
               <AiTwotoneHome size={27} />
@@ -103,10 +116,7 @@ const Menutablet = () => {
                 <BsPlusSquare size={26} />
               )}
             </div>
-            {/* <div className="relative">
-              <div className="w-3 h-3 bg-thRed rounded-full absolute top-0 right-0"></div>
-              <RiMessengerLine size={27} />
-            </div> */}
+
             <div
               className="relative"
               onClick={() => {
@@ -118,11 +128,23 @@ const Menutablet = () => {
               <BiBell size={27} />
             </div>
             <div>
-              <img
-                src={Images.av2.default.src}
-                alt=""
-                className="w-6 h-6 rounded-full object-cover"
-              />
+              <a href={`/profile/${currentUser && currentUser?.id}`}>
+                {currentUser?.avatar?.url ? (
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_HOSTNAME}${currentUser.avatar?.url}`}
+                    alt=""
+                    className="w-7 h-7 rounded-full object-cover"
+                    width={100}
+                    height={100}
+                  />
+                ) : (
+                  <img
+                    src={Images.default.default.src}
+                    alt=""
+                    className="w-7 h-7 rounded-full object-cover"
+                  />
+                )}
+              </a>
             </div>
           </div>
           {isMenu && (

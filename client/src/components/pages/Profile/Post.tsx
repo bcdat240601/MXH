@@ -69,8 +69,10 @@ const Post = ({ currentUser, likes, socket, img, id_post, user }: any) => {
   const [unlike] = useSound("../assets/sounds/unsavingSound.mp3");
   const [comment, setComment] = useState<boolean>(false);
   const [cookie] = useCookies(["user"]);
+  const [idPost, setIdPost] = useState(id_post);
   const inputRef = useRef<HTMLInputElement>(null);
   //   console.log(isReact.status);
+
   const handleReact = async (idPost: any) => {
     let likeData = {};
     let newData = foundItem?.attributes.beliked.data.map(
@@ -105,6 +107,28 @@ const Post = ({ currentUser, likes, socket, img, id_post, user }: any) => {
     }
     await socket.emit("post", id_post, likeData);
   };
+  if (idPost >= 0) {
+    socket.on("get-comments", async () => {
+      const token = cookie.user;
+      console.log(
+        `${process.env.NEXT_PUBLIC_CLIENT_URL}posts/${idPost}?populate[comments][populate][0]=user_comment`
+      );
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_CLIENT_URL}posts/${idPost}?populate[comments][populate][0]=user_comment`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.replaceAll('"', "")}`,
+          },
+        }
+      );
+      console.log(response?.data?.data?.attributes?.comments?.data);
+      setListComments({
+        totalComments: response?.data?.data?.attributes?.comments?.data.length,
+        arrComments: response?.data?.data?.attributes?.comments?.data,
+      });
+    });
+  }
+
   const handleSubmit = async (e: any) => {
     const token = cookie.user;
     console.log(inputRef.current?.value);
@@ -120,6 +144,7 @@ const Post = ({ currentUser, likes, socket, img, id_post, user }: any) => {
     };
     await socket.emit("comment", commentData);
     console.log(listComments.totalComments);
+    setIdPost(id_post);
     setListComments({
       arrComments: [
         ...listComments.arrComments,
@@ -129,6 +154,7 @@ const Post = ({ currentUser, likes, socket, img, id_post, user }: any) => {
     });
     if (inputRef.current) inputRef.current.value = "";
   };
+
   return (
     <div className="absolute z-50 left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 h-[70%] ">
       <div className="relative  flex post w-full h-full rounded-md overflow-hidden">

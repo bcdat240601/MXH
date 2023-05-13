@@ -17,13 +17,14 @@ const Postlist = ({ currentUser, postList, likes, socket, user }: any) => {
   });
   const [idPost, setidPost] = useState<number>(-1);
   const handlePost = async (id: number) => {
+    console.log(id);
     if (isPost.css === "opacity-0 invisible") {
       setisPost({ css: "opacity-1 visible", overlay: "opacity-60 visible" });
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_CLIENT_URL}posts/${id}?populate=files`
       );
-      setpostImg(response.data.data.attributes.files.data);
       setidPost(id);
+      setpostImg(response.data.data.attributes.files.data);
     } else {
       setisPost({ css: "opacity-0 invisible", overlay: "opacity-0 invisible" });
     }

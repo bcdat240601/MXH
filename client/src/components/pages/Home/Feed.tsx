@@ -35,7 +35,7 @@ const Feed = ({
 }: any) => {
   console.log(user_post_id);
   const [cookie] = useCookies(["user"]);
-  const { username } = user_post?.data.attributes;
+  const { username } = user_post?.data?.attributes;
   const inputRef = useRef<HTMLInputElement>(null);
 
   //declare
@@ -112,6 +112,7 @@ const Feed = ({
     await socket.emit("post", id_post, likeData);
   };
   const handleShow = () => {
+    console.log("Test");
     if (isShow === true) {
       document.body.style.overflow = "auto";
       setIsShow(false);
@@ -125,17 +126,17 @@ const Feed = ({
     const token = cookie.user;
     console.log("socket run");
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_CLIENT_URL}comments?populate=user_comment`,
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}posts/${id_post}?populate[comments][populate][0]=user_comment`,
       {
         headers: {
           Authorization: `Bearer ${token.replaceAll('"', "")}`,
         },
       }
     );
-    console.log(response.data.data);
+    console.log(response?.data?.data?.attributes?.comments?.data);
     setListComments({
-      totalComments: listComments.totalComments + 1,
-      arrComments: response.data.data,
+      totalComments: response?.data?.data?.attributes?.comments?.data.length,
+      arrComments: response?.data?.data?.attributes?.comments?.data,
     });
   });
 
@@ -165,6 +166,7 @@ const Feed = ({
       ],
       totalComments: listComments.totalComments + 1,
     });
+    if (inputRef.current) inputRef.current.value = "";
   };
 
   const handleSeeMore = async () => {
@@ -204,18 +206,27 @@ const Feed = ({
             className="overlay absolute w-full  h-full bg-black opacity-60 top-0 left-0 z-10"
             onClick={handleShow}
           ></div>
-          <Optionmbl {...handleShow} />
+          <Optionmbl handleShow={handleShow} />
         </div>
       )}
       <aside className="flex justify-between items-center px-4 py-4">
         <div className="flex gap-x-3 items-center">
-          <Image
-            src={`${process.env.NEXT_PUBLIC_HOSTNAME}${avatar}`}
-            alt=""
-            className="w-10 h-10 rounded-full object-cover"
-            width={1000}
-            height={1000}
-          />
+          {avatar !== "" ? (
+            <Image
+              src={`${process.env.NEXT_PUBLIC_HOSTNAME}${avatar}`}
+              alt=""
+              className="w-10 h-10 rounded-full object-cover"
+              width={1000}
+              height={1000}
+            />
+          ) : (
+            <img
+              src={Images.default.default.src}
+              alt=""
+              className="w-10 h-10 rounded-full object-cover"
+            />
+          )}
+
           <div className="text-[13px] md:text-sm">
             <a href={`/profile/${user_post?.data.id}`} className="font-bold">
               {username}

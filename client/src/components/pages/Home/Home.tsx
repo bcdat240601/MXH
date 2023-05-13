@@ -13,7 +13,7 @@ const Home = ({ posts, images, user, socket, likes, userList }: any) => {
   return (
     <>
       <section className="flex h-screen">
-        <Menutablet />
+        <Menutablet currentUser={user} />
         <Menudesktop currentUser={user} />
         <main className="flex-1 h-screen overflow-y-scroll md:pt-6 md:grid md:place-items-center gap-y-10">
           <Header />
@@ -25,7 +25,7 @@ const Home = ({ posts, images, user, socket, likes, userList }: any) => {
                 <div key={index} className="pt-3">
                   <Feed
                     currentUser={user}
-                    user_post_id={feed.attributes.user_post.data.id}
+                    user_post_id={feed.attributes.user_post.data?.id}
                     id_post={feed.id}
                     socket={socket}
                     comments={feed.attributes.comments.data}

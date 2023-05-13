@@ -28,7 +28,7 @@ const Profile = ({
     overlay: "opacity-0 invisible",
   });
   const [isOwn, setisOwn] = useState(currentUser.id);
-
+  console.log(user.avatar);
   const [followerState, setFollowerState] = useState(followers);
 
   const [isfollow, setIsFollow] = useState({
@@ -126,7 +126,7 @@ const Profile = ({
       <div className="hidden md:block">
         <Menudesktop currentUser={currentUser} />
 
-        <Menutablet />
+        <Menutablet currentUser={currentUser} />
       </div>
       <main className="mbl-profile md:hidden w-full     ">
         <section className="mbl-header">
@@ -141,11 +141,21 @@ const Profile = ({
         <section>
           <article>
             <div className="px-2 py-2 mx-auto w-fit mt-14  border-ava rounded-full ">
-              <img
-                src={`${process.env.NEXT_PUBLIC_HOSTNAME}${user.avatar?.url}`}
-                alt=""
-                className="w-[100px] h-[100px] object-cover rounded-full "
-              />
+              {user.avatar?.url ? (
+                <img
+                  src={`${process.env.NEXT_PUBLIC_HOSTNAME}${user.avatar?.url}`}
+                  alt=""
+                  className="w-[100px] h-[100px] rounded-full object-cover"
+                  width={100}
+                  height={100}
+                />
+              ) : (
+                <img
+                  src={Images.default.default.src}
+                  alt=""
+                  className="w-[100px] h-[100px] rounded-full object-cover"
+                />
+              )}
             </div>
             <div className="flex flex-col items-center mt-5">
               <p className="font-semibold text-lg ">{user.fullname}</p>
@@ -212,11 +222,21 @@ const Profile = ({
       <main className="hidden md:block mx-10 mt-14 flex-1">
         <section className="flex items-center gap-x-10">
           <div className="px-0.5 py-0.5 mx-auto w-fit border-2 border-black rounded-full ">
-            <img
-              src={`${process.env.NEXT_PUBLIC_HOSTNAME}${user.avatar?.url}`}
-              alt=""
-              className="w-[150px] h-[150px] object-cover rounded-full "
-            />
+            {user.avatar?.url ? (
+              <img
+                src={`${process.env.NEXT_PUBLIC_HOSTNAME}${user.avatar?.url}`}
+                alt=""
+                className="w-[150px] h-[150px] rounded-full object-cover"
+                width={100}
+                height={100}
+              />
+            ) : (
+              <img
+                src={Images.default.default.src}
+                alt=""
+                className="w-[150px] h-[150px] rounded-full object-cover"
+              />
+            )}
           </div>
           <article className="flex-1 h-fit">
             <div className="flex gap-x-20">

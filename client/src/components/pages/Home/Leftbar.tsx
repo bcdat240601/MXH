@@ -6,6 +6,7 @@ import Images from "../../../assets/images";
 import Suggest from "./Suggest";
 import Image from "next/image";
 import { useCookies } from "react-cookie";
+
 const Leftbar = ({ currentUser, userList }: any) => {
   const router = useRouter();
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
@@ -13,15 +14,22 @@ const Leftbar = ({ currentUser, userList }: any) => {
     <div className="left_bar w-[30rem] pl-5 pr-14 pt-12 hidden lg:block">
       <div className="flex items-center justify-between">
         <div className="flex gap-x-3 items-center">
-          <Image
-            src={`${process.env.NEXT_PUBLIC_HOSTNAME}${
-              currentUser.avatar?.url || "/"
-            }`}
-            alt=""
-            className="w-14 h-14 rounded-full object-cover"
-            width={100}
-            height={100}
-          />
+          {currentUser.avatar?.url ? (
+            <Image
+              src={`${process.env.NEXT_PUBLIC_HOSTNAME}${currentUser.avatar?.url}`}
+              alt=""
+              className="w-14 h-14 rounded-full object-cover"
+              width={100}
+              height={100}
+            />
+          ) : (
+            <img
+              src={Images.default.default.src}
+              alt=""
+              className="w-8 h-8 rounded-full object-cover"
+            />
+          )}
+
           <div className="text-[13px] md:text-sm">
             <a href={`/profile/${currentUser.id}`} className="font-bold">
               {currentUser.username}
